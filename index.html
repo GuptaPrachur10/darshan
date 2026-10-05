@@ -3,16 +3,30 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Dress Catalog</title>
+  <title>ISKCON London Darshan Catalog</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="style.css">
+  <script>
+    // Apply the saved theme before first paint to avoid a flash.
+    if (localStorage.getItem('theme') === 'light') document.documentElement.classList.add('light-mode');
+  </script>
 </head>
 <body>
-  <header class="topbar">
-    <a href="#/" class="brand">Dress Catalog</a>
+  <button id="theme-toggle" class="theme-toggle" type="button" aria-label="Toggle theme">
+    <svg viewBox="0 0 24 24" aria-hidden="true">
+      <path d="M12 2.25a.75.75 0 01.75.75v2.25a.75.75 0 01-1.5 0V3a.75.75 0 01.75-.75zM7.5 12a4.5 4.5 0 119 0 4.5 4.5 0 01-9 0zM18.894 6.166a.75.75 0 00-1.06-1.06l-1.591 1.59a.75.75 0 101.06 1.061l1.591-1.59zM21.75 12a.75.75 0 01-.75.75h-2.25a.75.75 0 010-1.5H21a.75.75 0 01.75.75zM17.834 18.894a.75.75 0 001.06-1.06l-1.59-1.591a.75.75 0 10-1.061 1.06l1.59 1.591zM12 18.75a.75.75 0 01.75.75V21a.75.75 0 01-1.5 0v-1.5a.75.75 0 01.75-.75zM6.166 18.894a.75.75 0 001.06-1.06l-1.59-1.591a.75.75 0 10-1.061 1.06l1.59 1.591zM2.25 12a.75.75 0 01.75-.75h2.25a.75.75 0 010 1.5H3a.75.75 0 01-.75-.75zM6.166 5.106a.75.75 0 00-1.06 1.06l1.59 1.591a.75.75 0 101.061-1.06l-1.59-1.591z"/>
+    </svg>
+  </button>
+
+  <header class="header">
+    <a href="#/" class="brand"><h1><span class="text-gradient">Dress</span> Catalog</h1></a>
   </header>
+
   <main id="app" aria-live="polite">
-    <p class="status">Loading…</p>
+    <p class="loading">Loading…</p>
   </main>
+
   <!-- Full-screen photo viewer with pinch / wheel / double-tap zoom. -->
   <div id="viewer" class="viewer" hidden>
     <div id="viewer-stage" class="viewer-stage">
@@ -25,6 +39,7 @@
       <button id="viewer-close" type="button" aria-label="Close">✕</button>
     </div>
   </div>
+
   <script src="app.js"></script>
 </body>
 </html>
