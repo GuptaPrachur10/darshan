@@ -1,1 +1,30 @@
-
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Dress Catalog</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header class="topbar">
+    <a href="#/" class="brand">Dress Catalog</a>
+  </header>
+  <main id="app" aria-live="polite">
+    <p class="status">Loading…</p>
+  </main>
+  <!-- Full-screen photo viewer with pinch / wheel / double-tap zoom. -->
+  <div id="viewer" class="viewer" hidden>
+    <div id="viewer-stage" class="viewer-stage">
+      <img id="viewer-img" alt="" draggable="false">
+    </div>
+    <div class="viewer-bar">
+      <button id="viewer-prev" type="button" aria-label="Previous photo">‹</button>
+      <span id="viewer-info"></span>
+      <button id="viewer-next" type="button" aria-label="Next photo">›</button>
+      <button id="viewer-close" type="button" aria-label="Close">✕</button>
+    </div>
+  </div>
+  <script src="app.js"></script>
+</body>
+</html>
