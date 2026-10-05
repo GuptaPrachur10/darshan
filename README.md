@@ -55,29 +55,4 @@ Edit `config.json` (the pencil icon on GitHub) and add an entry to `dresses`:
 - Leave out empty jewelry cells.
 - Deity sets and jewellery names must match the `glossary` at the top of the file.
 
-## One-time setup
-
-1. **Drive** (personal Google account): create the folders above. Share `Dress Catalog`
-   as *Anyone with the link → Viewer*, and add editors by email as *Editor*.
-2. **API key:** in [Google Cloud Console](https://console.cloud.google.com/), create a
-   project, enable the **Google Drive API**, then *Credentials → Create credentials → API key*.
-   Restrict it:
-   - *Application restrictions → Websites:* `https://<your-github-user>.github.io/*`
-     (also `http://localhost:8000/*` for local testing)
-   - *API restrictions:* Google Drive API only
-3. **settings.json:** fill in the API key and the folder IDs (the last part of each folder's
-   Drive URL: `drive.google.com/drive/folders/<THIS_PART>`). Leave `nightOutfitsFolderId`
-   empty until night outfit photos exist. The letters then show as plain text.
-4. **GitHub Pages:** *Settings → Pages → Deploy from a branch → `main` / root*. The site
-   appears at `https://<your-github-user>.github.io/<repo-name>/`.
-
-The API key is visible in the page source. That's expected; the restrictions above stop it
-being used on other sites or for other APIs.
-
-## Testing locally
-
-```
-python3 -m http.server 8000
-```
-
 Then open `http://localhost:8000`. Opening `index.html` directly as a file doesn't wor
