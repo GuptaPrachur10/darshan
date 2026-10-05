@@ -592,13 +592,6 @@ window.addEventListener('resize', () => {
   if (!viewer.el.hidden && viewer.img.naturalWidth) fitImage();
 });
 
-// ---------------------------------------------------------------- theme
-
-document.getElementById('theme-toggle').addEventListener('click', () => {
-  const light = document.documentElement.classList.toggle('light-mode');
-  localStorage.setItem('theme', light ? 'light' : 'dark');
-});
-
 // ---------------------------------------------------------------- start
 
 async function start() {
@@ -607,3 +600,15 @@ async function start() {
   } catch (err) {
     app.innerHTML = `<p class="status error">Could not load config.json: ${esc(err.message)}</p>`;
     return;
+  }
+  try {
+    state.settings = await loadJson('settings.json');
+  } catch (_) {
+    state.settings = null; // text still works; galleries say "not set up"
+  }
+  state.config.dresses = state.config.dresses || [];
+  window.addEventListener('hashchange', route);
+  route();
+}
+
+start();
