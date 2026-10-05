@@ -181,7 +181,7 @@ function renderHome() {
   const g = state.config.glossary || {};
   const f = state.filters;
   app.innerHTML = `
-    <section class="controls">
+    <section class="controls panel">
       <input id="search" type="search" placeholder="Search by number or name"
              value="${esc(f.q)}" autocomplete="off">
       ${chipGroup('Weather', 'weather', [
@@ -591,6 +591,13 @@ document.addEventListener('keydown', (e) => {
 
 window.addEventListener('resize', () => {
   if (!viewer.el.hidden && viewer.img.naturalWidth) fitImage();
+});
+
+// ---------------------------------------------------------------- theme
+
+document.getElementById('theme-toggle').addEventListener('click', () => {
+  const light = document.documentElement.classList.toggle('light-mode');
+  localStorage.setItem('theme', light ? 'light' : 'dark');
 });
 
 // ---------------------------------------------------------------- start
