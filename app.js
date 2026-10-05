@@ -18,15 +18,15 @@ const DRIVE_API = 'https://www.googleapis.com/drive/v3/files';
 const ALL_MARKS = new Set(['✓', '✔', 'Y', 'y', 'yes', 'Yes', 'YES']);
 const ORIGINAL_MIME_OK = /^image\/(jpeg|png|webp|gif)$/; // browsers can't show HEIC originals
 const WEATHER = {
-  hot: { short: 'Hot', long: 'Hot Weather' },
-  cold: { short: 'Cold', long: 'Cold Weather' },
-  both: { short: 'Hot & Cold', long: 'Hot & Cold Weather' },
+  hot: { short: 'Hot', long: 'Hot Weather', icon: '☀' },
+  cold: { short: 'Cold', long: 'Cold Weather', icon: '❄' },
+  both: { short: 'Hot & Cold', long: 'Hot & Cold Weather', icon: '☀❄' },
 };
 
 const state = {
   config: null,
   settings: null,
-  filters: { q: '', weather: '', deity: '', jewel: '', color: '' },
+  filters: { q: '', weather: '', deity: '', color: '' },
   photoCache: new Map(), // "<parentId>/<name>" -> photos[] | null (folder missing)
   galleryToken: 0,
   view: '',
@@ -48,6 +48,15 @@ function isAll(mark) {
 
 function markText(mark) {
   return isAll(mark) ? '✓' : String(mark);
+}
+
+/** "light blue" -> "Light Blue", whatever case it was typed in. */
+function colorName(c) {
+  return String(c).trim().toLowerCase().replace(/\b\w/g, (ch) => ch.toUpperCase());
+}
+
+function colorList(colors) {
+  return (colors || []).map(colorName).join(', ');
 }
 
 function weatherInfo(w) {
@@ -187,7 +196,7 @@ function renderHome() {
       ${chipGroup('Weather', 'weather', [
         { value: 'hot', label: 'Hot' }, { value: 'cold', label: 'Cold' }])}
       ${chipGroup('Deity set', 'deity', (g.deitySets || []).map((s) => ({ value: s, label: s })))}
-      ${chipGroup('Color', 'color', allColors().map((c) => ({ value: c, label: c })))}
+      ${chipGroup('Color', 'color', allColors().map((c) => ({ value: c, label: colorName(c) })))}
     </section>
     <p id="count" class="count"></p>
     <ul id="list" class="list"></ul>`;
@@ -226,7 +235,7 @@ function updateList() {
   document.getElementById('list').innerHTML = shown.map((d) => {
     const w = weatherInfo(d.weather);
     const meta = [
-      (d.colors || []).join(', '),
+      colorList(d.colors),
       d.nightOutfits?.length ? `Night: ${d.nightOutfits.join(' ')}` : '',
     ].filter(Boolean).join(' · ');
     return `
@@ -291,7 +300,10 @@ function renderDress(id) {
       <header class="card-head">
         <span class="num-badge">${esc(d.id)}</span>
         <h1>${esc(d.name)}</h1>
-        <span class="sticker weather-${esc(d.weather)}">Suitable for<b>${esc(w.long)}</b></span>
+        <span class="sticker sticker-${esc(d.weather)}">
+          <span class="sticker-icon" aria-hidden="true">${esc(w.icon)}</span>
+          <span>Suitable for <b>${esc(w.long)}</b></span>
+        </span>
       </header>
       ${jewelryTable(d)}
       <dl class="facts">
