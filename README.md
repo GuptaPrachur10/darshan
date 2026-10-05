@@ -1,4 +1,4 @@
-# Dress Catalog
+# ISKCON London Darshan Catalog
 
 A digital version of the dress book. Each card's text lives in `config.json`
 here on GitHub. Photos live in Google Drive and load only when a dress is
