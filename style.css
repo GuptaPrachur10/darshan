@@ -1,609 +1,420 @@
-'use strict';
-
 /*
- * Dress Catalog: a static, single-page app.
- *
- * Text comes from config.json (in the repo). Photos come from Google Drive,
- * fetched only when a dress (or night outfit) is opened:
- *   settings.dressesFolderId/<dress id>/*.jpg
- *   settings.nightOutfitsFolderId/<letter>/*.jpg
- *
- * Pages (hash routes, so GitHub Pages needs no server config):
- *   #/            text-only list with search + filters
- *   #/dress/7     dress card + photo gallery
- *   #/night/E     night outfit photos + dresses that use it
+ * Warm temple palette: ivory paper, saffron, marigold, kumkum maroon, tulsi green, gold.
+ * Background has a faint gold lotus pattern; the dress card has leafy vine borders
+ * like the printed cards in the book.
  */
-
-const DRIVE_API = 'https://www.googleapis.com/drive/v3/files';
-const ALL_MARKS = new Set(['✓', '✔', 'Y', 'y', 'yes', 'Yes', 'YES']);
-const ORIGINAL_MIME_OK = /^image\/(jpeg|png|webp|gif)$/; // browsers can't show HEIC originals
-const WEATHER = {
-  hot: { short: 'Hot', long: 'Hot Weather', icon: '☀' },
-  cold: { short: 'Cold', long: 'Cold Weather', icon: '❄' },
-  both: { short: 'Hot & Cold', long: 'Hot & Cold Weather', icon: '☀❄' },
-};
-
-const state = {
-  config: null,
-  settings: null,
-  filters: { q: '', weather: '', color: '' },
-  photoCache: new Map(), // "<parentId>/<name>" -> photos[] | null (folder missing)
-  galleryToken: 0,
-  view: '',
-  homeScroll: 0,
-};
-
-const app = document.getElementById('app');
-
-// ---------------------------------------------------------------- helpers
-
-function esc(value) {
-  return String(value ?? '').replace(/[&<>"']/g, (c) => (
-    { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+:root {
+  --bg: #fbf3e4;
+  --paper: #fffaf1;
+  --ink: #3b2414;
+  --muted: #8a6a4f;
+  --saffron: #e07b1a;
+  --marigold: #f2a93b;
+  --kumkum: #9e2a2b;
+  --tulsi: #4f7a3a;
+  --sky: #3f6e9e;
+  --gold: #c9962b;
+  --line: rgba(158, 42, 43, 0.16);
+  --shadow: 0 8px 24px rgba(120, 60, 20, 0.08);
+  --radius: 18px;
+  --display: "Marcellus", Georgia, serif;
 }
 
-function isAll(mark) {
-  return mark === true || ALL_MARKS.has(mark);
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  padding: 28px 20px 48px;
+  font-family: "Nunito", system-ui, sans-serif;
+  color: var(--ink);
+  background-color: var(--bg);
+  /* Soft saffron glow at the top, over a tiled lotus pattern. */
+  background-image:
+    radial-gradient(ellipse at top, rgba(242, 169, 59, 0.18), transparent 60%),
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160' viewBox='0 0 160 160'%3E%3Cg fill='none' stroke='%23c9962b' stroke-opacity='0.22' stroke-width='1.1'%3E%3Cg transform='translate(40 40)'%3E%3Cpath d='M0 0C6-7 6-16 0-22C-6-16-6-7 0 0Z'/%3E%3Cpath d='M0 0C6-7 6-16 0-22C-6-16-6-7 0 0Z' transform='rotate(45)'/%3E%3Cpath d='M0 0C6-7 6-16 0-22C-6-16-6-7 0 0Z' transform='rotate(90)'/%3E%3Cpath d='M0 0C6-7 6-16 0-22C-6-16-6-7 0 0Z' transform='rotate(135)'/%3E%3Cpath d='M0 0C6-7 6-16 0-22C-6-16-6-7 0 0Z' transform='rotate(180)'/%3E%3Cpath d='M0 0C6-7 6-16 0-22C-6-16-6-7 0 0Z' transform='rotate(225)'/%3E%3Cpath d='M0 0C6-7 6-16 0-22C-6-16-6-7 0 0Z' transform='rotate(270)'/%3E%3Cpath d='M0 0C6-7 6-16 0-22C-6-16-6-7 0 0Z' transform='rotate(315)'/%3E%3Ccircle r='4'/%3E%3C/g%3E%3Cg transform='translate(120 120) scale(.6)'%3E%3Cpath d='M0 0C6-7 6-16 0-22C-6-16-6-7 0 0Z'/%3E%3Cpath d='M0 0C6-7 6-16 0-22C-6-16-6-7 0 0Z' transform='rotate(60)'/%3E%3Cpath d='M0 0C6-7 6-16 0-22C-6-16-6-7 0 0Z' transform='rotate(120)'/%3E%3Cpath d='M0 0C6-7 6-16 0-22C-6-16-6-7 0 0Z' transform='rotate(180)'/%3E%3Cpath d='M0 0C6-7 6-16 0-22C-6-16-6-7 0 0Z' transform='rotate(240)'/%3E%3Cpath d='M0 0C6-7 6-16 0-22C-6-16-6-7 0 0Z' transform='rotate(300)'/%3E%3Ccircle r='4'/%3E%3C/g%3E%3C/g%3E%3Cg fill='%23e07b1a' fill-opacity='0.18'%3E%3Ccircle cx='120' cy='40' r='2.5'/%3E%3Ccircle cx='40' cy='120' r='2.5'/%3E%3C/g%3E%3C/svg%3E");
+  background-attachment: fixed, scroll;
+  -webkit-font-smoothing: antialiased;
+}
+body.no-scroll { overflow: hidden; }
+
+a { color: var(--kumkum); }
+
+/* ---------- header ---------- */
+
+.header { text-align: center; margin-bottom: 26px; }
+.brand { display: inline-block; text-decoration: none; color: var(--ink); }
+.brand-sub {
+  display: block;
+  font-size: 12px;
+  font-weight: 800;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  color: var(--saffron);
+  margin-bottom: 4px;
+}
+.header h1 {
+  margin: 0;
+  font-family: var(--display);
+  font-weight: 400;
+  font-size: 38px;
+  letter-spacing: 0.5px;
+  color: var(--kumkum);
 }
 
-function markText(mark) {
-  return isAll(mark) ? '✓' : String(mark);
+.ornament {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  margin: 10px auto 0;
+  max-width: 260px;
+  color: var(--gold);
+  font-size: 18px;
+}
+.ornament::before,
+.ornament::after {
+  content: "";
+  flex: 1;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--gold));
+}
+.ornament::after { background: linear-gradient(90deg, var(--gold), transparent); }
+
+main { max-width: 880px; margin: 0 auto; }
+
+.status { color: var(--muted); padding: 12px 0; }
+.status.error { color: var(--kumkum); }
+
+.loading {
+  text-align: center;
+  font-family: var(--display);
+  font-size: 20px;
+  color: var(--saffron);
+  margin-top: 60px;
+  animation: pulse 1.6s infinite;
+}
+@keyframes pulse { 0%, 100% { opacity: 0.55; } 50% { opacity: 1; } }
+
+.panel {
+  background: var(--paper);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  padding: 18px 20px;
 }
 
-/** "light blue" -> "Light Blue", whatever case it was typed in. */
-function colorName(c) {
-  return String(c).trim().toLowerCase().replace(/\b\w/g, (ch) => ch.toUpperCase());
+/* ---------- home ---------- */
+
+.controls { display: grid; gap: 14px; margin-bottom: 22px; }
+
+#search {
+  width: 100%;
+  padding: 12px 18px;
+  font: 600 15px "Nunito", sans-serif;
+  color: var(--ink);
+  background: var(--bg);
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  outline: none;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+#search::placeholder { color: var(--muted); }
+#search:focus { border-color: var(--saffron); box-shadow: 0 0 0 3px rgba(224, 123, 26, 0.15); }
+
+.chip-group { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; }
+.chip-label {
+  min-width: 80px;
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  color: var(--kumkum);
 }
 
-function colorList(colors) {
-  return (colors || []).map(colorName).join(', ');
+.chip {
+  padding: 6px 14px;
+  font: 700 13px "Nunito", sans-serif;
+  color: var(--ink);
+  background: var(--bg);
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+.chip:hover { border-color: var(--saffron); }
+.chip.on {
+  background: linear-gradient(135deg, var(--marigold), var(--saffron));
+  border-color: var(--saffron);
+  color: #fff;
 }
 
-function weatherInfo(w) {
-  return WEATHER[w] || { short: w || '?', long: w || 'Unknown' };
+.count { color: var(--muted); font-size: 13px; font-weight: 700; margin: 0 0 10px 4px; }
+
+.list { list-style: none; margin: 0; padding: 0; display: grid; gap: 10px; }
+
+.row {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 12px 18px 12px 14px;
+  background: var(--paper);
+  border: 1px solid var(--line);
+  border-left: 4px solid var(--marigold);
+  border-radius: 14px;
+  color: inherit;
+  text-decoration: none;
+  box-shadow: 0 2px 8px rgba(120, 60, 20, 0.04);
+  transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+}
+.row:hover {
+  transform: translateY(-2px);
+  border-color: var(--saffron);
+  box-shadow: var(--shadow);
 }
 
-function sortedDresses() {
-  return [...state.config.dresses].sort((a, b) => a.id - b.id);
+/* Round number badge, like the cream disc on the printed cards. */
+.num, .num-badge {
+  flex: none;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  font-family: var(--display);
+  color: var(--kumkum);
+  background: var(--paper);
+  border: 1.5px dashed var(--gold);
+  box-shadow: 0 0 0 3px var(--paper), 0 0 0 4px rgba(201, 150, 43, 0.35);
+}
+.num { width: 42px; height: 42px; font-size: 18px; }
+
+.row-main { flex: 1; min-width: 0; display: grid; gap: 2px; }
+.row-name { font-family: var(--display); font-size: 18px; }
+.row-meta { color: var(--muted); font-size: 13px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+
+.badge {
+  flex: none;
+  padding: 4px 12px;
+  border-radius: 999px;
+  font-size: 12px;
+  font-weight: 800;
+  color: #fff;
+  background: var(--muted);
+}
+.weather-hot { background: linear-gradient(135deg, var(--marigold), var(--saffron)); }
+.weather-cold { background: var(--sky); }
+.weather-both { background: var(--tulsi); }
+
+/* ---------- dress card ---------- */
+
+.crumbs { display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px; font-weight: 700; }
+.crumbs a { text-decoration: none; }
+.pager a { margin-left: 16px; }
+
+.card {
+  position: relative;
+  background: var(--paper);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  padding: 26px 46px;
+}
+/* Leafy vine borders down both sides, echoing the book's cards. */
+.card::before,
+.card::after {
+  content: "";
+  position: absolute;
+  top: 18px;
+  bottom: 18px;
+  width: 16px;
+  background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='30' viewBox='0 0 16 30'%3E%3Cpath d='M8 0V30' stroke='%234f7a3a' stroke-opacity='.4' stroke-width='1'/%3E%3Cpath d='M8 8C12 4 15.5 5 15.5 8.5C12.5 11 10 10.5 8 8Z' fill='%234f7a3a' fill-opacity='.35'/%3E%3Cpath d='M8 23C4 19 .5 20 .5 23.5C3.5 26 6 25.5 8 23Z' fill='%234f7a3a' fill-opacity='.35'/%3E%3C/svg%3E") repeat-y center top;
+  pointer-events: none;
+}
+.card::before { left: 14px; }
+.card::after { right: 14px; }
+
+.card-head {
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  align-items: center;
+  gap: 18px;
+  margin-bottom: 22px;
+}
+.card-head h1 {
+  margin: 0;
+  font-family: var(--display);
+  font-weight: 400;
+  font-size: 30px;
+  color: var(--ink);
+}
+.num-badge { width: 62px; height: 62px; font-size: 28px; }
+
+.sticker {
+  --tone: var(--muted);
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 16px;
+  border-radius: 999px;
+  border: 1px solid color-mix(in srgb, var(--tone) 45%, transparent);
+  background: color-mix(in srgb, var(--tone) 12%, transparent);
+  color: var(--muted);
+  font-size: 13px;
+  font-weight: 700;
+  white-space: nowrap;
+}
+.sticker b { color: var(--tone); font-weight: 800; }
+.sticker-icon { color: var(--tone); font-size: 16px; line-height: 1; }
+.sticker-hot { --tone: var(--saffron); }
+.sticker-cold { --tone: var(--sky); }
+.sticker-both { --tone: var(--tulsi); }
+
+.jewelry {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+  text-align: center;
+  font-size: 14px;
+  margin-bottom: 22px;
+  background: var(--bg);
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  overflow: hidden;
+}
+.jewelry th, .jewelry td { padding: 11px 8px; border-bottom: 1px solid var(--line); }
+.jewelry tbody tr:last-child th, .jewelry tbody tr:last-child td { border-bottom: 0; }
+.jewelry thead th {
+  color: var(--kumkum);
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  background: rgba(242, 169, 59, 0.12);
+}
+.jewelry tbody th { text-align: left; padding-left: 16px; font-family: var(--display); font-size: 16px; font-weight: 400; width: 22%; }
+.jewelry td { font-size: 17px; font-weight: 800; color: var(--tulsi); }
+
+.facts { margin: 0; display: grid; grid-template-columns: max-content 1fr; gap: 12px 18px; }
+.facts dt {
+  color: var(--kumkum);
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  padding-top: 4px;
+}
+.facts dd { margin: 0; }
+.facts-line { margin: 0; }
+
+.pill {
+  display: inline-block;
+  padding: 3px 12px;
+  margin: 2px 0;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  background: var(--bg);
+  color: var(--ink);
+  font-weight: 800;
+  font-size: 13px;
+  text-decoration: none;
+}
+a.pill { color: var(--kumkum); transition: border-color 0.2s ease; }
+a.pill:hover { border-color: var(--saffron); }
+
+/* ---------- gallery ---------- */
+
+.photos h2 {
+  font-family: var(--display);
+  font-weight: 400;
+  font-size: 22px;
+  color: var(--kumkum);
+  margin: 30px 0 12px;
 }
 
-function findDress(id) {
-  return state.config.dresses.find((d) => d.id === id);
+.gallery {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+  gap: 12px;
+}
+.thumb {
+  padding: 0;
+  border: 3px solid var(--paper);
+  border-radius: 14px;
+  overflow: hidden;
+  aspect-ratio: 1;
+  background: var(--paper);
+  box-shadow: 0 0 0 1px var(--line), var(--shadow);
+  cursor: zoom-in;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+.thumb:hover { transform: scale(1.02); box-shadow: 0 0 0 1px var(--saffron), var(--shadow); }
+.thumb img { width: 100%; height: 100%; object-fit: cover; display: block; }
+
+/* ---------- viewer (stays dark so photos stand out) ---------- */
+
+.viewer { position: fixed; inset: 0; z-index: 20; background: #1a110b; }
+.viewer[hidden] { display: none; }
+
+.viewer-stage {
+  position: absolute;
+  inset: 0 0 64px 0;
+  overflow: hidden;
+  touch-action: none;
+  cursor: grab;
+}
+.viewer-stage img {
+  position: absolute;
+  left: 0;
+  top: 0;
+  transform-origin: 0 0;
+  user-select: none;
+  -webkit-user-select: none;
+  -webkit-user-drag: none;
 }
 
-async function loadJson(path) {
-  const res = await fetch(path, { cache: 'no-cache' });
-  if (!res.ok) throw new Error(`${path}: HTTP ${res.status}`);
-  return res.json();
+.viewer-bar {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 64px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  color: #d9c2a6;
+  font-size: 13px;
+  font-weight: 700;
+}
+.viewer-bar button {
+  width: 42px;
+  height: 42px;
+  border: 1px solid rgba(242, 169, 59, 0.4);
+  border-radius: 50%;
+  background: #2b1d13;
+  color: #fbf3e4;
+  font-size: 18px;
+  cursor: pointer;
+  transition: border-color 0.2s ease;
+}
+.viewer-bar button:hover { border-color: var(--marigold); }
+
+/* ---------- mobile ---------- */
+
+@media (max-width: 768px) {
+  body { padding: 20px 12px 40px; }
+  .header h1 { font-size: 30px; }
+  .brand-sub { font-size: 11px; letter-spacing: 2.5px; }
 }
 
-// ---------------------------------------------------------------- Drive
-
-function driveReady(folderId) {
-  const s = state.settings;
-  return Boolean(s && s.apiKey && !s.apiKey.startsWith('YOUR_') &&
-    folderId && !folderId.startsWith('YOUR_'));
+@media (max-width: 520px) {
+  .card { padding: 20px 34px; }
+  .card::before { left: 9px; }
+  .card::after { right: 9px; }
+  .card-head { grid-template-columns: auto 1fr; gap: 14px; }
+  .card-head h1 { font-size: 24px; }
+  .num-badge { width: 52px; height: 52px; font-size: 24px; }
+  .sticker { grid-column: 1 / -1; justify-self: start; }
+  .chip-label { min-width: 100%; }
+  .facts { grid-template-columns: 1fr; gap: 4px; }
+  .facts dd { margin-bottom: 10px; }
+  .row-name { font-size: 17px; }
 }
-
-function quote(s) {
-  return String(s).replace(/\\/g, '\\\\').replace(/'/g, "\\'");
-}
-
-async function driveList(q, fields) {
-  const params = new URLSearchParams({
-    q,
-    fields,
-    key: state.settings.apiKey,
-    pageSize: '1000',
-    orderBy: 'name_natural',
-    supportsAllDrives: 'true',
-    includeItemsFromAllDrives: 'true',
-  });
-  const res = await fetch(`${DRIVE_API}?${params}`);
-  if (!res.ok) {
-    let msg = `HTTP ${res.status}`;
-    try { msg = (await res.json()).error.message || msg; } catch (_) { /* keep msg */ }
-    throw new Error(msg);
-  }
-  return (await res.json()).files || [];
-}
-
-/** Returns the photos in <parentId>/<name>, or null if that folder doesn't exist. */
-async function photosIn(parentId, name) {
-  const key = `${parentId}/${name}`;
-  if (state.photoCache.has(key)) return state.photoCache.get(key);
-
-  const folders = await driveList(
-    `'${quote(parentId)}' in parents and name = '${quote(name)}' and ` +
-    `mimeType = 'application/vnd.google-apps.folder' and trashed = false`,
-    'files(id,name)');
-
-  let photos = null;
-  if (folders.length) {
-    const files = await driveList(
-      `'${quote(folders[0].id)}' in parents and mimeType contains 'image/' and trashed = false`,
-      'files(id,name,mimeType,thumbnailLink,imageMediaMetadata(width,height))');
-    photos = files.map((f) => ({
-      id: f.id,
-      name: f.name,
-      mimeType: f.mimeType,
-      thumb: f.thumbnailLink || '',
-      width: f.imageMediaMetadata?.width || 0,
-      height: f.imageMediaMetadata?.height || 0,
-    }));
-  }
-  state.photoCache.set(key, photos);
-  return photos;
-}
-
-/** A Drive-rendered preview at roughly `size` px on the long edge. */
-function previewUrl(photo, size) {
-  if (photo.thumb) return photo.thumb.replace(/=s\d+[^/]*$/, '') + `=s${size}`;
-  return `https://lh3.googleusercontent.com/d/${encodeURIComponent(photo.id)}=s${size}`;
-}
-
-function originalUrl(photo) {
-  return `${DRIVE_API}/${encodeURIComponent(photo.id)}?alt=media&key=${encodeURIComponent(state.settings.apiKey)}`;
-}
-
-// ---------------------------------------------------------------- routing
-
-function route() {
-  closeViewer();
-  if (state.view === 'home') state.homeScroll = window.scrollY;
-
-  const parts = location.hash.replace(/^#\/?/, '').split('/').filter(Boolean)
-    .map(decodeURIComponent);
-
-  if (parts[0] === 'dress' && parts[1]) {
-    state.view = 'dress';
-    renderDress(Number(parts[1]));
-    window.scrollTo(0, 0);
-  } else if (parts[0] === 'night' && parts[1]) {
-    state.view = 'night';
-    renderNight(parts[1].toUpperCase());
-    window.scrollTo(0, 0);
-  } else {
-    state.view = 'home';
-    renderHome();
-    window.scrollTo(0, state.homeScroll);
-  }
-}
-
-// ---------------------------------------------------------------- home
-
-function allColors() {
-  const set = new Set();
-  state.config.dresses.forEach((d) => (d.colors || []).forEach((c) => set.add(String(c).toLowerCase())));
-  return [...set].sort();
-}
-
-function chipGroup(label, key, options) {
-  if (!options.length) return '';
-  const chips = options.map((o) => `
-    <button type="button" class="chip${state.filters[key] === o.value ? ' on' : ''}"
-            data-key="${key}" data-value="${esc(o.value)}">${esc(o.label)}</button>`).join('');
-  return `<div class="chip-group"><span class="chip-label">${esc(label)}</span>${chips}</div>`;
-}
-
-function renderHome() {
-  const f = state.filters;
-  app.innerHTML = `
-    <section class="controls panel">
-      <input id="search" type="search" placeholder="Search by number or name"
-             value="${esc(f.q)}" autocomplete="off">
-      ${chipGroup('Weather', 'weather', [
-        { value: 'hot', label: 'Hot' }, { value: 'cold', label: 'Cold' }])}
-      ${chipGroup('Color', 'color', allColors().map((c) => ({ value: c, label: colorName(c) })))}
-    </section>
-    <p id="count" class="count"></p>
-    <ul id="list" class="list"></ul>`;
-
-  document.getElementById('search').addEventListener('input', (e) => {
-    f.q = e.target.value;
-    updateList();
-  });
-  app.querySelectorAll('.chip').forEach((chip) => chip.addEventListener('click', () => {
-    const { key, value } = chip.dataset;
-    f[key] = f[key] === value ? '' : value; // tap again to clear
-    app.querySelectorAll(`.chip[data-key="${key}"]`).forEach((c) =>
-      c.classList.toggle('on', c.dataset.value === f[key]));
-    updateList();
-  }));
-  updateList();
-}
-
-function matches(d) {
-  const f = state.filters;
-  const q = f.q.trim().toLowerCase();
-  if (q && !String(d.id).startsWith(q) && !String(d.name || '').toLowerCase().includes(q)) return false;
-  if (f.weather && d.weather !== f.weather && d.weather !== 'both') return false;
-  if (f.color && !(d.colors || []).some((c) => String(c).toLowerCase() === f.color)) return false;
-  return true;
-}
-
-function updateList() {
-  const shown = sortedDresses().filter(matches);
-  document.getElementById('count').textContent =
-    `${shown.length} of ${state.config.dresses.length} dresses`;
-  document.getElementById('list').innerHTML = shown.map((d) => {
-    const w = weatherInfo(d.weather);
-    const meta = [
-      colorList(d.colors),
-      d.nightOutfits?.length ? `Night: ${d.nightOutfits.join(' ')}` : '',
-    ].filter(Boolean).join(' · ');
-    return `
-      <li><a class="row" href="#/dress/${d.id}">
-        <span class="num">${esc(d.id)}</span>
-        <span class="row-main">
-          <span class="row-name">${esc(d.name)}</span>
-          ${meta ? `<span class="row-meta">${esc(meta)}</span>` : ''}
-        </span>
-        <span class="badge weather-${esc(d.weather)}">${esc(w.short)}</span>
-      </a></li>`;
-  }).join('') || '<li class="status">No dresses match these filters.</li>';
-}
-
-// ---------------------------------------------------------------- dress
-
-function jewelryTable(d) {
-  const jw = d.jewelry || {};
-  if (!Object.keys(jw).length) return '';
-  const g = state.config.glossary || {};
-  // Glossary order first; unknown codes are still shown (raw) instead of dropped.
-  const rows = [...new Set([...(g.deitySets || []), ...Object.keys(jw)])];
-  const cols = [...new Set([...(g.jewelry || []), ...Object.values(jw).flatMap((r) => Object.keys(r || {}))])];
-
-  const head = cols.map((c) => `<th scope="col">${esc(c)}</th>`).join('');
-  const body = rows.map((r) => `
-    <tr><th scope="row">${esc(r)}</th>${cols.map((c) => {
-      const mark = jw[r]?.[c];
-      return `<td>${mark === undefined || mark === '' ? '' : esc(markText(mark))}</td>`;
-    }).join('')}</tr>`).join('');
-  return `<table class="jewelry"><thead><tr><th></th>${head}</tr></thead><tbody>${body}</tbody></table>`;
-}
-
-function nightLinks(letters) {
-  const linked = driveReady(state.settings?.nightOutfitsFolderId);
-  return letters.map((l) => (linked
-    ? `<a class="pill" href="#/night/${encodeURIComponent(l)}">${esc(l)}</a>`
-    : `<span class="pill">${esc(l)}</span>`)).join(' ');
-}
-
-function renderDress(id) {
-  const d = findDress(id);
-  if (!d) {
-    app.innerHTML = `<p class="status">Dress ${esc(id)} not found. <a href="#/">Back to all dresses</a></p>`;
-    return;
-  }
-  const list = sortedDresses();
-  const i = list.indexOf(d);
-  const prev = list[i - 1];
-  const next = list[i + 1];
-  const w = weatherInfo(d.weather);
-
-  app.innerHTML = `
-    <nav class="crumbs">
-      <a href="#/">← All dresses</a>
-      <span class="pager">
-        ${prev ? `<a href="#/dress/${prev.id}" aria-label="Previous dress">‹ ${esc(prev.id)}</a>` : ''}
-        ${next ? `<a href="#/dress/${next.id}" aria-label="Next dress">${esc(next.id)} ›</a>` : ''}
-      </span>
-    </nav>
-    <article class="card">
-      <header class="card-head">
-        <span class="num-badge">${esc(d.id)}</span>
-        <h1>${esc(d.name)}</h1>
-        <span class="sticker sticker-${esc(d.weather)}">
-          <span class="sticker-icon" aria-hidden="true">${esc(w.icon)}</span>
-          <span>Suitable for <b>${esc(w.long)}</b></span>
-        </span>
-      </header>
-      ${jewelryTable(d)}
-      <dl class="facts">
-        ${d.nightOutfits?.length ? `<dt>Night outfit options</dt><dd>${nightLinks(d.nightOutfits)}</dd>` : ''}
-        ${d.colors?.length ? `<dt>Colors</dt><dd>${esc(colorList(d.colors))}</dd>` : ''}
-        ${d.backdrop ? `<dt>Matching backdrop</dt><dd>${esc(d.backdrop)}</dd>` : ''}
-      </dl>
-    </article>
-    <section class="photos">
-      <h2>Photos</h2>
-      <div id="gallery" class="gallery"></div>
-    </section>`;
-
-  loadGallery(state.settings?.dressesFolderId, String(d.id));
-}
-
-// ---------------------------------------------------------------- night outfit
-
-function renderNight(letter) {
-  const users = sortedDresses().filter((d) => (d.nightOutfits || []).includes(letter));
-  app.innerHTML = `
-    <nav class="crumbs"><a href="#/">← All dresses</a></nav>
-    <article class="card">
-      <header class="card-head">
-        <span class="num-badge">${esc(letter)}</span>
-        <h1>Night outfit ${esc(letter)}</h1>
-      </header>
-      ${users.length ? `<p class="facts-line">Listed with: ${users.map((d) =>
-        `<a class="pill" href="#/dress/${d.id}">${esc(d.id)} · ${esc(d.name)}</a>`).join(' ')}</p>` : ''}
-    </article>
-    <section class="photos">
-      <h2>Photos</h2>
-      <div id="gallery" class="gallery"></div>
-    </section>`;
-
-  loadGallery(state.settings?.nightOutfitsFolderId, letter);
-}
-
-// ---------------------------------------------------------------- gallery
-
-async function loadGallery(parentId, name) {
-  const el = document.getElementById('gallery');
-  const token = ++state.galleryToken;
-  if (!driveReady(parentId)) {
-    el.innerHTML = '<p class="status">Photos are not set up yet (see settings.json).</p>';
-    return;
-  }
-  el.innerHTML = '<p class="status">Loading photos…</p>';
-  try {
-    const photos = await photosIn(parentId, name);
-    if (token !== state.galleryToken) return; // user navigated away
-    if (!photos || !photos.length) {
-      el.innerHTML = '<p class="status">No photos yet.</p>';
-      return;
-    }
-    el.innerHTML = photos.map((p, i) => `
-      <button type="button" class="thumb" data-i="${i}" aria-label="Open ${esc(p.name)}">
-        <img loading="lazy" src="${esc(previewUrl(p, 800))}" alt="${esc(p.name)}">
-      </button>`).join('');
-    el.querySelectorAll('.thumb').forEach((b) =>
-      b.addEventListener('click', () => openViewer(photos, Number(b.dataset.i))));
-  } catch (err) {
-    if (token === state.galleryToken) {
-      el.innerHTML = `<p class="status error">Could not load photos: ${esc(err.message)}</p>`;
-    }
-  }
-}
-
-// ---------------------------------------------------------------- viewer (zoom)
-
-const viewer = {
-  el: document.getElementById('viewer'),
-  stage: document.getElementById('viewer-stage'),
-  img: document.getElementById('viewer-img'),
-  info: document.getElementById('viewer-info'),
-  photos: [],
-  index: 0,
-  s: 1, tx: 0, ty: 0,           // current scale and translation
-  fitW: 0, fitH: 0, maxS: 4,
-  original: 'none',             // none | loading | done | failed
-  pointers: new Map(),
-  pinch: null,
-  gesture: null,
-  lastTap: 0,
-};
-
-function openViewer(photos, index) {
-  viewer.photos = photos;
-  viewer.el.hidden = false;
-  document.body.classList.add('no-scroll');
-  showPhoto(index);
-}
-
-function closeViewer() {
-  if (viewer.el.hidden) return;
-  viewer.el.hidden = true;
-  document.body.classList.remove('no-scroll');
-  viewer.img.removeAttribute('src');
-}
-
-function updateInfo() {
-  const n = viewer.photos.length;
-  const extra = viewer.original === 'loading' ? ' · loading full resolution…'
-    : viewer.original === 'done' ? ' · full resolution' : '';
-  viewer.info.textContent = `${viewer.index + 1} / ${n}${extra}`;
-}
-
-function showPhoto(index) {
-  const n = viewer.photos.length;
-  viewer.index = ((index % n) + n) % n;
-  viewer.original = 'none';
-  updateInfo();
-  const img = viewer.img;
-  img.style.visibility = 'hidden';
-  img.onload = () => {
-    img.onload = null;
-    fitImage();
-    img.style.visibility = '';
-  };
-  img.src = previewUrl(viewer.photos[viewer.index], 2000);
-}
-
-function fitImage() {
-  const W = viewer.stage.clientWidth;
-  const H = viewer.stage.clientHeight;
-  const nw = viewer.img.naturalWidth || 1;
-  const nh = viewer.img.naturalHeight || 1;
-  const r = Math.min(W / nw, H / nh);
-  viewer.fitW = nw * r;
-  viewer.fitH = nh * r;
-  viewer.img.style.width = `${viewer.fitW}px`;
-  viewer.img.style.height = `${viewer.fitH}px`;
-
-  const p = viewer.photos[viewer.index];
-  const origLong = Math.max(p.width, p.height);
-  viewer.maxS = Math.max(4, origLong ? (origLong / Math.max(viewer.fitW, viewer.fitH)) * 2 : 4);
-  resetZoom();
-}
-
-function resetZoom() {
-  viewer.s = 1;
-  clampPan();
-  applyTransform();
-}
-
-function clampPan() {
-  const W = viewer.stage.clientWidth;
-  const H = viewer.stage.clientHeight;
-  const w = viewer.fitW * viewer.s;
-  const h = viewer.fitH * viewer.s;
-  viewer.tx = w <= W ? (W - w) / 2 : Math.min(0, Math.max(W - w, viewer.tx));
-  viewer.ty = h <= H ? (H - h) / 2 : Math.min(0, Math.max(H - h, viewer.ty));
-}
-
-function applyTransform() {
-  viewer.img.style.transform = `translate(${viewer.tx}px, ${viewer.ty}px) scale(${viewer.s})`;
-}
-
-function zoomAt(px, py, newScale) {
-  const ns = Math.min(viewer.maxS, Math.max(1, newScale));
-  viewer.tx = px - (px - viewer.tx) * (ns / viewer.s);
-  viewer.ty = py - (py - viewer.ty) * (ns / viewer.s);
-  viewer.s = ns;
-  clampPan();
-  applyTransform();
-  maybeLoadOriginal();
-}
-
-/** Swap in the full-resolution file only once the user actually zooms in. */
-function maybeLoadOriginal() {
-  if (viewer.s < 1.5 || viewer.original !== 'none') return;
-  const photo = viewer.photos[viewer.index];
-  if (!ORIGINAL_MIME_OK.test(photo.mimeType)) {
-    viewer.original = 'failed'; // e.g. HEIC: stay on the Drive preview
-    return;
-  }
-  viewer.original = 'loading';
-  updateInfo();
-  const index = viewer.index;
-  const full = new Image();
-  full.onload = () => {
-    if (viewer.index !== index || viewer.el.hidden) return;
-    viewer.img.src = full.src; // same box size, so the zoom position is kept
-    viewer.original = 'done';
-    updateInfo();
-  };
-  full.onerror = () => {
-    if (viewer.index !== index) return;
-    viewer.original = 'failed';
-    updateInfo();
-  };
-  full.src = originalUrl(photo);
-}
-
-function stagePoint(e) {
-  const r = viewer.stage.getBoundingClientRect();
-  return { x: e.clientX - r.left, y: e.clientY - r.top };
-}
-
-function pinchInfo() {
-  const [a, b] = [...viewer.pointers.values()];
-  return {
-    dist: Math.hypot(a.x - b.x, a.y - b.y),
-    mid: { x: (a.x + b.x) / 2, y: (a.y + b.y) / 2 },
-  };
-}
-
-viewer.stage.addEventListener('wheel', (e) => {
-  e.preventDefault();
-  const p = stagePoint(e);
-  zoomAt(p.x, p.y, viewer.s * Math.exp(-e.deltaY * 0.0015));
-}, { passive: false });
-
-viewer.stage.addEventListener('pointerdown', (e) => {
-  viewer.stage.setPointerCapture(e.pointerId);
-  const p = stagePoint(e);
-  viewer.pointers.set(e.pointerId, p);
-  if (viewer.pointers.size === 2) {
-    const { dist, mid } = pinchInfo();
-    viewer.pinch = { dist, s: viewer.s, mid };
-    viewer.gesture = null;
-  } else if (viewer.pointers.size === 1) {
-    viewer.gesture = { start: p, last: p, moved: false };
-  }
-});
-
-viewer.stage.addEventListener('pointermove', (e) => {
-  if (!viewer.pointers.has(e.pointerId)) return;
-  const p = stagePoint(e);
-  viewer.pointers.set(e.pointerId, p);
-
-  if (viewer.pinch && viewer.pointers.size === 2) {
-    const { dist, mid } = pinchInfo();
-    viewer.tx += mid.x - viewer.pinch.mid.x; // two-finger pan
-    viewer.ty += mid.y - viewer.pinch.mid.y;
-    viewer.pinch.mid = mid;
-    zoomAt(mid.x, mid.y, viewer.pinch.s * (dist / viewer.pinch.dist));
-  } else if (viewer.gesture) {
-    const g = viewer.gesture;
-    if (Math.hypot(p.x - g.start.x, p.y - g.start.y) > 8) g.moved = true;
-    if (viewer.s > 1) {
-      viewer.tx += p.x - g.last.x;
-      viewer.ty += p.y - g.last.y;
-      clampPan();
-      applyTransform();
-    }
-    g.last = p;
-  }
-});
-
-function endPointer(e) {
-  if (!viewer.pointers.has(e.pointerId)) return;
-  viewer.pointers.delete(e.pointerId);
-  if (viewer.pointers.size < 2) viewer.pinch = null;
-
-  const g = viewer.gesture;
-  if (!g || viewer.pointers.size) return;
-  viewer.gesture = null;
-  if (e.type === 'pointercancel') return;
-
-  const p = stagePoint(e);
-  const dx = p.x - g.start.x;
-  const dy = p.y - g.start.y;
-  if (!g.moved) {
-    // Double tap / double click toggles zoom.
-    const now = Date.now();
-    if (now - viewer.lastTap < 300) {
-      viewer.lastTap = 0;
-      if (viewer.s > 1) resetZoom(); else zoomAt(p.x, p.y, 3);
-    } else {
-      viewer.lastTap = now;
-    }
-  } else if (viewer.s === 1 && Math.abs(dx) > 60 && Math.abs(dx) > Math.abs(dy)) {
-    showPhoto(viewer.index + (dx < 0 ? 1 : -1)); // swipe when not zoomed
-  }
-}
-viewer.stage.addEventListener('pointerup', endPointer);
-viewer.stage.addEventListener('pointercancel', endPointer);
-
-document.getElementById('viewer-prev').addEventListener('click', () => showPhoto(viewer.index - 1));
-document.getElementById('viewer-next').addEventListener('click', () => showPhoto(viewer.index + 1));
-document.getElementById('viewer-close').addEventListener('click', closeViewer);
-
-document.addEventListener('keydown', (e) => {
-  if (viewer.el.hidden) return;
-  if (e.key === 'Escape') closeViewer();
-  else if (e.key === 'ArrowLeft') showPhoto(viewer.index - 1);
-  else if (e.key === 'ArrowRight') showPhoto(viewer.index + 1);
-});
-
-window.addEventListener('resize', () => {
-  if (!viewer.el.hidden && viewer.img.naturalWidth) fitImage();
-});
-
-// ---------------------------------------------------------------- theme
-
-document.getElementById('theme-toggle').addEventListener('click', () => {
-  const light = document.documentElement.classList.toggle('light-mode');
-  localStorage.setItem('theme', light ? 'light' : 'dark');
-});
-
-// ---------------------------------------------------------------- start
-
-async function start() {
-  try {
-    state.config = await loadJson('config.json');
-  } catch (err) {
-    app.innerHTML = `<p class="status error">Could not load config.json: ${esc(err.message)}</p>`;
-    return;
