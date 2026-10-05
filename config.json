@@ -1,1 +1,22 @@
-
+{
+  "glossary": {
+    "deitySets": ["RK", "JBS", "GG", "GN"],
+    "jewelry": ["jewellery1", "jewellery2", "jewellery3"]
+  },
+  "dresses": [
+    {
+      "id": 1,
+      "name": "Vines & Butterflies",
+      "weather": "hot",
+      "colors": ["blue", "yellow"],
+      "nightOutfits": ["E", "P", "I", "R"],
+      "jewelry": {
+        "RK":  { "jewellery1": "✓", "jewellery2": "✓", "jewellery3": "✓" },
+        "JBS": { "jewellery1": "S", "jewellery2": "✓" },
+        "GG":  { "jewellery1": "✓" },
+        "GN":  { "jewellery1": "✓" }
+      },
+      "backdrop": "See picture above for preferred option"
+    }
+  ]
+}
