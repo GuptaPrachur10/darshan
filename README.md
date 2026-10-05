@@ -54,5 +54,3 @@ Edit `config.json` (the pencil icon on GitHub) and add an entry to `dresses`:
 
 - Leave out empty jewelry cells.
 - Deity sets and jewellery names must match the `glossary` at the top of the file.
-
-Then open `http://localhost:8000`. Opening `index.html` directly as a file doesn't wor
