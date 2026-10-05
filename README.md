@@ -1,4 +1,3 @@
-
 # Dress Catalog
 
 A digital version of the dress book. Each card's text lives in `config.json`
@@ -8,8 +7,8 @@ opened.
 ## For photo editors (Google Drive)
 
 ```
-Dress Catalog/
-├── Dresses/
+DarshanApp/
+├── Darshan/
 │   ├── 1/        ← photos of dress 1 (any file names, any number of photos)
 │   ├── 2/
 │   └── …
@@ -55,8 +54,6 @@ Edit `config.json` (the pencil icon on GitHub) and add an entry to `dresses`:
 
 - Leave out empty jewelry cells.
 - Deity sets and jewellery names must match the `glossary` at the top of the file.
-- After each change, the **Validate config** check (Actions tab) flags mistakes. If it shows
-  red, open it to see exactly what's wrong.
 
 ## One-time setup
 
@@ -83,4 +80,4 @@ being used on other sites or for other APIs.
 python3 -m http.server 8000
 ```
 
-Then open `http://localhost:8000`. Opening `index.html` directly as a file doesn't work.
+Then open `http://localhost:8000`. Opening `index.html` directly as a file doesn't wor
