@@ -187,7 +187,6 @@ function chipGroup(label, key, options) {
 }
 
 function renderHome() {
-  const g = state.config.glossary || {};
   const f = state.filters;
   app.innerHTML = `
     <section class="controls panel">
@@ -615,4 +614,8 @@ async function start() {
     state.settings = null; // text still works; galleries say "not set up"
   }
   state.config.dresses = state.config.dresses || [];
-  window.addEventListener('has
+  window.addEventListener('hashchange', route);
+  route();
+}
+
+start();
