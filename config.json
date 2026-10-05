@@ -17,6 +17,31 @@
         "GN":  { "crowns": "✓" }
       },
       "backdrop": "See picture above for preferred option"
+    },
+    {
+      "id": 2,
+      "name": "Winter Velvet",
+      "weather": "cold",
+      "colors": ["maroon", "gold"],
+      "nightOutfits": ["A", "C"],
+      "jewelry": {
+        "RK":  { "crowns": "✓", "suryas": "✓" },
+        "JBS": { "crowns": "✓", "turban pieces": "✓", "suryas": "✓" },
+        "GN":  { "turban pieces": "N" }
+      },
+      "backdrop": "Deep red curtain with gold border"
+    },
+    {
+      "id": 3,
+      "name": "Lotus Garden",
+      "weather": "both",
+      "colors": ["pink", "white", "green"],
+      "nightOutfits": ["B", "E", "K"],
+      "jewelry": {
+        "RK":  { "crowns": "K", "turban pieces": "✓" },
+        "GG":  { "crowns": "✓", "turban pieces": "✓" },
+        "GN":  { "crowns": "✓", "suryas": "✓" }
+      }
     }
   ]
 }
