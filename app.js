@@ -308,7 +308,7 @@ function renderDress(id) {
       ${jewelryTable(d)}
       <dl class="facts">
         ${d.nightOutfits?.length ? `<dt>Night outfit options</dt><dd>${nightLinks(d.nightOutfits)}</dd>` : ''}
-        ${d.colors?.length ? `<dt>Colors</dt><dd>${esc(d.colors.join(', '))}</dd>` : ''}
+        ${d.colors?.length ? `<dt>Colors</dt><dd>${esc(colorList(d.colors))}</dd>` : ''}
         ${d.backdrop ? `<dt>Matching backdrop</dt><dd>${esc(d.backdrop)}</dd>` : ''}
       </dl>
     </article>
