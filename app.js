@@ -26,7 +26,7 @@ const WEATHER = {
 const state = {
   config: null,
   settings: null,
-  filters: { q: '', weather: '', deity: '', color: '' },
+  filters: { q: '', weather: '', color: '' },
   photoCache: new Map(), // "<parentId>/<name>" -> photos[] | null (folder missing)
   galleryToken: 0,
   view: '',
@@ -195,7 +195,6 @@ function renderHome() {
              value="${esc(f.q)}" autocomplete="off">
       ${chipGroup('Weather', 'weather', [
         { value: 'hot', label: 'Hot' }, { value: 'cold', label: 'Cold' }])}
-      ${chipGroup('Deity set', 'deity', (g.deitySets || []).map((s) => ({ value: s, label: s })))}
       ${chipGroup('Color', 'color', allColors().map((c) => ({ value: c, label: colorName(c) })))}
     </section>
     <p id="count" class="count"></p>
@@ -220,10 +219,6 @@ function matches(d) {
   const q = f.q.trim().toLowerCase();
   if (q && !String(d.id).startsWith(q) && !String(d.name || '').toLowerCase().includes(q)) return false;
   if (f.weather && d.weather !== f.weather && d.weather !== 'both') return false;
-
-  const row = (d.jewelry || {})[f.deity];
-  if (f.deity && (!row || !Object.keys(row).length)) return false;
-
   if (f.color && !(d.colors || []).some((c) => String(c).toLowerCase() === f.color)) return false;
   return true;
 }
@@ -620,8 +615,4 @@ async function start() {
     state.settings = null; // text still works; galleries say "not set up"
   }
   state.config.dresses = state.config.dresses || [];
-  window.addEventListener('hashchange', route);
-  route();
-}
-
-start();
+  window.addEventListener('has
