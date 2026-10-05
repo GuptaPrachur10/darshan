@@ -1,460 +1,60 @@
-/*
- * Floral garden theme.
- * - Content sits on solid white cards with dark green-black text for clean contrast.
- * - Background: soft meadow gradient, flowering branches in the top corners,
- *   and leaves/petals slowly drifting down behind the content.
- */
-:root {
-  --ink: #142a1c;          /* main text: deep green-black */
-  --muted: #3f5647;        /* secondary text, still high contrast */
-  --green: #2f6b3f;        /* primary accent */
-  --green-dark: #1d4a2a;   /* headings, selected states */
-  --leaf: #5c9b61;
-  --leaf-soft: #e7f3e8;
-  --blue: #2d6189;
-  --blue-soft: #e6f0f8;
-  --warm: #a8611c;
-  --warm-soft: #fbf1e4;
-  --paper: #ffffff;
-  --line: #d3e3d6;
-  --shadow: 0 6px 20px rgba(20, 42, 28, 0.08);
-  --radius: 16px;
-  --display: "Quicksand", "Nunito", system-ui, sans-serif;
-}
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#eef6f0">
+  <title>ISKCON London Darshan Catalog</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@600;700&family=Nunito:wght@500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css?v=11">
+</head>
+<body>
+  <!-- Flowering branches in the top corners. -->
+  <div class="branch branch-left" aria-hidden="true"></div>
+  <div class="branch branch-right" aria-hidden="true"></div>
 
-* { box-sizing: border-box; }
+  <!-- Leaves and petals drifting down behind the content. Pure CSS, no JS. -->
+  <div class="falling" aria-hidden="true">
+    <span class="leaf a" style="--x:6%;  --d:19s; --delay:-2s;  --size:22px; --drift:60px"><i></i></span>
+    <span class="leaf p" style="--x:14%; --d:23s; --delay:-11s; --size:14px; --drift:-40px"><i></i></span>
+    <span class="leaf b" style="--x:22%; --d:17s; --delay:-6s;  --size:18px; --drift:50px"><i></i></span>
+    <span class="leaf w" style="--x:31%; --d:25s; --delay:-15s; --size:13px; --drift:-30px"><i></i></span>
+    <span class="leaf a" style="--x:39%; --d:21s; --delay:-9s;  --size:20px; --drift:70px"><i></i></span>
+    <span class="leaf p" style="--x:48%; --d:18s; --delay:-1s;  --size:15px; --drift:-55px"><i></i></span>
+    <span class="leaf b" style="--x:57%; --d:24s; --delay:-13s; --size:21px; --drift:45px"><i></i></span>
+    <span class="leaf w" style="--x:65%; --d:20s; --delay:-7s;  --size:12px; --drift:-35px"><i></i></span>
+    <span class="leaf a" style="--x:73%; --d:22s; --delay:-17s; --size:19px; --drift:55px"><i></i></span>
+    <span class="leaf p" style="--x:81%; --d:16s; --delay:-4s;  --size:14px; --drift:-45px"><i></i></span>
+    <span class="leaf b" style="--x:89%; --d:26s; --delay:-20s; --size:17px; --drift:40px"><i></i></span>
+    <span class="leaf a" style="--x:95%; --d:19s; --delay:-12s; --size:16px; --drift:-60px"><i></i></span>
+  </div>
 
-html { background: #eef6f0; }
+  <header class="header">
+    <a href="#/" class="brand">
+      <h1>ISKCON London</h1>
+      <span class="brand-sub">Darshan Catalog</span>
+    </a>
+  </header>
 
-body {
-  position: relative;
-  min-height: 100vh;
-  margin: 0;
-  padding: 34px 20px 56px;
-  font-family: "Nunito", system-ui, sans-serif;
-  font-size: 16px;
-  line-height: 1.55;
-  color: var(--ink);
-  /* Morning sky fading into meadow green. */
-  background: linear-gradient(180deg, #e9f3f8 0%, #f3f8f2 35%, #eaf4e8 100%) fixed;
-  overflow-x: hidden;
-  -webkit-font-smoothing: antialiased;
-}
-body.no-scroll { overflow: hidden; }
+  <main id="app" aria-live="polite">
+    <p class="loading">Loading…</p>
+  </main>
 
-a { color: var(--green); }
+  <!-- Full-screen photo viewer with pinch / wheel / double-tap zoom. -->
+  <div id="viewer" class="viewer" hidden>
+    <div id="viewer-stage" class="viewer-stage">
+      <img id="viewer-img" alt="" draggable="false">
+    </div>
+    <div class="viewer-bar">
+      <button id="viewer-prev" type="button" aria-label="Previous photo">‹</button>
+      <span id="viewer-info"></span>
+      <button id="viewer-next" type="button" aria-label="Next photo">›</button>
+      <button id="viewer-close" type="button" aria-label="Close">✕</button>
+    </div>
+  </div>
 
-/* Everything readable sits above the decorative layers. */
-.header, main { position: relative; z-index: 2; }
-
-/* ---------- garden decorations ---------- */
-
-.branch {
-  position: absolute;
-  top: 0;
-  width: 280px;
-  height: 230px;
-  z-index: 1;
-  pointer-events: none;
-  background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 280 230'%3E%3Cpath d='M-5 18C55 26 105 55 140 105C162 137 190 168 250 190' fill='none' stroke='%23476b3c' stroke-width='3' stroke-linecap='round'/%3E%3Cpath d='M70 40C90 30 110 32 128 22' fill='none' stroke='%23476b3c' stroke-width='2' stroke-linecap='round'/%3E%3Cpath d='M150 120C170 112 188 118 205 108' fill='none' stroke='%23476b3c' stroke-width='2' stroke-linecap='round'/%3E%3Cg fill='%235c9b61'%3E%3Cellipse cx='35' cy='22' rx='16' ry='6.5' transform='rotate(18 35 22)'/%3E%3Cellipse cx='100' cy='62' rx='15' ry='6' transform='rotate(50 100 62)'/%3E%3Cellipse cx='150' cy='130' rx='15' ry='6' transform='rotate(42 150 130)'/%3E%3Cellipse cx='225' cy='182' rx='15' ry='6' transform='rotate(25 225 182)'/%3E%3Cellipse cx='112' cy='26' rx='12' ry='5' transform='rotate(-20 112 26)'/%3E%3C/g%3E%3Cg fill='%2384bb7f'%3E%3Cellipse cx='62' cy='38' rx='14' ry='5.5' transform='rotate(-30 62 38)'/%3E%3Cellipse cx='128' cy='94' rx='14' ry='5.5' transform='rotate(-15 128 94)'/%3E%3Cellipse cx='190' cy='162' rx='14' ry='5.5' transform='rotate(-35 190 162)'/%3E%3Cellipse cx='192' cy='112' rx='12' ry='5' transform='rotate(-25 192 112)'/%3E%3C/g%3E%3Cg transform='translate(130 22)'%3E%3Cg fill='%23ffffff' stroke='%23e6b8c6' stroke-width='1.2'%3E%3Cellipse cy='-10' rx='6.5' ry='10'/%3E%3Cellipse cy='-10' rx='6.5' ry='10' transform='rotate(72)'/%3E%3Cellipse cy='-10' rx='6.5' ry='10' transform='rotate(144)'/%3E%3Cellipse cy='-10' rx='6.5' ry='10' transform='rotate(216)'/%3E%3Cellipse cy='-10' rx='6.5' ry='10' transform='rotate(288)'/%3E%3C/g%3E%3Ccircle r='4.5' fill='%23f2c94c'/%3E%3C/g%3E%3Cg transform='translate(207 107) scale(.8)'%3E%3Cg fill='%23f7cfdb' stroke='%23e3a8bb' stroke-width='1.2'%3E%3Cellipse cy='-10' rx='6.5' ry='10'/%3E%3Cellipse cy='-10' rx='6.5' ry='10' transform='rotate(72)'/%3E%3Cellipse cy='-10' rx='6.5' ry='10' transform='rotate(144)'/%3E%3Cellipse cy='-10' rx='6.5' ry='10' transform='rotate(216)'/%3E%3Cellipse cy='-10' rx='6.5' ry='10' transform='rotate(288)'/%3E%3C/g%3E%3Ccircle r='4.5' fill='%23f2c94c'/%3E%3C/g%3E%3Cg transform='translate(252 190) scale(.7)'%3E%3Cg fill='%23cfe0f4' stroke='%239dbfe0' stroke-width='1.2'%3E%3Cellipse cy='-10' rx='6.5' ry='10'/%3E%3Cellipse cy='-10' rx='6.5' ry='10' transform='rotate(72)'/%3E%3Cellipse cy='-10' rx='6.5' ry='10' transform='rotate(144)'/%3E%3Cellipse cy='-10' rx='6.5' ry='10' transform='rotate(216)'/%3E%3Cellipse cy='-10' rx='6.5' ry='10' transform='rotate(288)'/%3E%3C/g%3E%3Ccircle r='4.5' fill='%23f2c94c'/%3E%3C/g%3E%3Ccircle cx='85' cy='50' r='3' fill='%23f7cfdb'/%3E%3Ccircle cx='168' cy='146' r='3' fill='%23ffffff' stroke='%23e6b8c6'/%3E%3C/svg%3E") no-repeat top left / contain;
-  opacity: 0.95;
-}
-.branch-left { left: 0; }
-.branch-right { right: 0; transform: scaleX(-1); }
-
-/* Falling leaves: outer span falls, inner <i> sways and spins. */
-.falling {
-  position: fixed;
-  inset: 0;
-  z-index: 1;
-  overflow: hidden;
-  pointer-events: none;
-}
-.leaf {
-  position: absolute;
-  top: -40px;
-  left: var(--x);
-  animation: fall var(--d) linear var(--delay) infinite;
-}
-.leaf i {
-  display: block;
-  width: var(--size);
-  height: var(--size);
-  background: no-repeat center / contain;
-  animation: sway calc(var(--d) / 4) ease-in-out var(--delay) infinite alternate;
-}
-.leaf.a i { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M12 1C5 6 3 13 6 22C15 21 21 14 20 3C17 2 14 1 12 1Z' fill='%235c9b61'/%3E%3Cpath d='M6 22C10 15 14 9 19 4' stroke='%232f6b3f' stroke-width='1.1' fill='none'/%3E%3C/svg%3E"); }
-.leaf.b i { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M12 1C5 6 3 13 6 22C15 21 21 14 20 3C17 2 14 1 12 1Z' fill='%2393c48c'/%3E%3Cpath d='M6 22C10 15 14 9 19 4' stroke='%23477a44' stroke-width='1.1' fill='none'/%3E%3C/svg%3E"); }
-.leaf.p i { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M12 2C17 6 18 14 12 22C6 14 7 6 12 2Z' fill='%23f6c6d4'/%3E%3C/svg%3E"); }
-.leaf.w i { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M12 2C17 6 18 14 12 22C6 14 7 6 12 2Z' fill='%23ffffff' stroke='%23d9c3cc'/%3E%3C/svg%3E"); }
-
-@keyframes fall {
-  0%   { transform: translate3d(0, 0, 0); opacity: 0; }
-  8%   { opacity: 0.85; }
-  92%  { opacity: 0.85; }
-  100% { transform: translate3d(var(--drift), 110vh, 0); opacity: 0; }
-}
-@keyframes sway {
-  0%   { transform: translateX(-18px) rotate(-35deg); }
-  100% { transform: translateX(18px) rotate(40deg); }
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .falling { display: none; }
-}
-
-/* ---------- header ---------- */
-
-.header { text-align: center; margin: 4px 0 30px; }
-.brand { display: inline-block; text-decoration: none; }
-.header h1 {
-  margin: 0;
-  font-family: var(--display);
-  font-weight: 700;
-  font-size: 46px;
-  line-height: 1.1;
-  color: var(--green-dark);
-  letter-spacing: 0.3px;
-}
-.brand-sub {
-  display: block;
-  margin-top: 6px;
-  font-size: 15px;
-  font-weight: 800;
-  letter-spacing: 4px;
-  text-transform: uppercase;
-  color: var(--muted);
-}
-
-main { max-width: 860px; margin: 0 auto; }
-
-.status { color: var(--muted); padding: 12px 0; font-weight: 600; }
-.status.error { color: #b3261e; }
-
-.loading {
-  text-align: center;
-  font-family: var(--display);
-  font-size: 20px;
-  font-weight: 700;
-  color: var(--green);
-  margin-top: 60px;
-  animation: pulse 1.6s infinite;
-}
-@keyframes pulse { 0%, 100% { opacity: 0.5; } 50% { opacity: 1; } }
-
-.panel {
-  background: var(--paper);
-  border: 1px solid var(--line);
-  border-radius: var(--radius);
-  box-shadow: var(--shadow);
-  padding: 18px 20px;
-}
-
-/* ---------- home ---------- */
-
-.controls { display: grid; gap: 14px; margin-bottom: 22px; }
-
-#search {
-  width: 100%;
-  padding: 12px 18px;
-  font: 600 16px "Nunito", sans-serif;
-  color: var(--ink);
-  background: #f7faf7;
-  border: 1.5px solid var(--line);
-  border-radius: 12px;
-  outline: none;
-  transition: border-color 0.2s ease, box-shadow 0.2s ease;
-}
-#search::placeholder { color: #6b7f71; }
-#search:focus { border-color: var(--green); box-shadow: 0 0 0 3px rgba(47, 107, 63, 0.15); }
-
-.chip-group { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; }
-.chip-label {
-  min-width: 80px;
-  font-size: 13px;
-  font-weight: 800;
-  letter-spacing: 0.8px;
-  text-transform: uppercase;
-  color: var(--green-dark);
-}
-
-.chip {
-  padding: 6px 15px;
-  font: 700 14px "Nunito", sans-serif;
-  color: var(--ink);
-  background: var(--paper);
-  border: 1.5px solid var(--line);
-  border-radius: 999px;
-  cursor: pointer;
-  transition: all 0.2s ease;
-}
-.chip:hover { border-color: var(--green); }
-.chip.on { background: var(--green-dark); border-color: var(--green-dark); color: #fff; }
-
-.count { color: var(--muted); font-size: 14px; font-weight: 700; margin: 0 0 10px 4px; }
-
-.list { list-style: none; margin: 0; padding: 0; display: grid; gap: 10px; }
-
-.row {
-  display: flex;
-  align-items: center;
-  gap: 14px;
-  padding: 13px 18px 13px 14px;
-  background: var(--paper);
-  border: 1px solid var(--line);
-  border-radius: 14px;
-  color: inherit;
-  text-decoration: none;
-  box-shadow: 0 2px 8px rgba(20, 42, 28, 0.05);
-  transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
-}
-.row:hover { transform: translateY(-2px); border-color: var(--green); box-shadow: var(--shadow); }
-
-.num, .num-badge {
-  flex: none;
-  display: grid;
-  place-items: center;
-  border-radius: 50%;
-  font-family: var(--display);
-  font-weight: 700;
-  color: #fff;
-  background: var(--green);
-  box-shadow: 0 0 0 3px var(--paper), 0 0 0 5px var(--leaf-soft);
-}
-.num { width: 42px; height: 42px; font-size: 17px; }
-
-.row-main { flex: 1; min-width: 0; display: grid; gap: 2px; }
-.row-name { font-size: 17px; font-weight: 800; color: var(--ink); }
-.row-meta { color: var(--muted); font-size: 14px; font-weight: 600; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-
-.badge {
-  flex: none;
-  padding: 4px 12px;
-  border-radius: 999px;
-  font-size: 13px;
-  font-weight: 800;
-  border: 1px solid transparent;
-}
-.weather-hot { color: var(--warm); background: var(--warm-soft); border-color: #eccfaa; }
-.weather-cold { color: var(--blue); background: var(--blue-soft); border-color: #bfd6ea; }
-.weather-both { color: var(--green); background: var(--leaf-soft); border-color: #bfdcc3; }
-
-/* ---------- dress card ---------- */
-
-.crumbs { display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px; font-weight: 800; }
-.crumbs a {
-  text-decoration: none;
-  background: var(--paper);
-  padding: 6px 14px;
-  border-radius: 999px;
-  border: 1px solid var(--line);
-}
-.pager a { margin-left: 8px; }
-
-.card {
-  background: var(--paper);
-  border: 1px solid var(--line);
-  border-top: 5px solid var(--leaf);
-  border-radius: var(--radius);
-  box-shadow: var(--shadow);
-  padding: 24px 26px;
-}
-
-.card-head {
-  display: grid;
-  grid-template-columns: auto 1fr auto;
-  align-items: center;
-  gap: 18px;
-  margin-bottom: 22px;
-}
-.card-head h1 {
-  margin: 0;
-  font-family: var(--display);
-  font-weight: 700;
-  font-size: 30px;
-  line-height: 1.2;
-  color: var(--ink);
-}
-.num-badge { width: 60px; height: 60px; font-size: 26px; }
-
-.sticker {
-  --tone: var(--muted);
-  --tone-bg: #f3f5f3;
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  padding: 8px 16px;
-  border-radius: 999px;
-  border: 1px solid var(--line);
-  background: var(--tone-bg);
-  color: var(--ink);
-  font-size: 14px;
-  font-weight: 700;
-  white-space: nowrap;
-}
-.sticker b { color: var(--tone); font-weight: 800; }
-.sticker-icon { color: var(--tone); font-size: 16px; line-height: 1; }
-.sticker-hot { --tone: var(--warm); --tone-bg: var(--warm-soft); }
-.sticker-cold { --tone: var(--blue); --tone-bg: var(--blue-soft); }
-.sticker-both { --tone: var(--green); --tone-bg: var(--leaf-soft); }
-
-.jewelry {
-  width: 100%;
-  border-collapse: separate;
-  border-spacing: 0;
-  text-align: center;
-  font-size: 15px;
-  margin-bottom: 22px;
-  border: 1px solid var(--line);
-  border-radius: 12px;
-  overflow: hidden;
-}
-.jewelry th, .jewelry td { padding: 11px 8px; border-bottom: 1px solid var(--line); }
-.jewelry tbody tr:last-child th, .jewelry tbody tr:last-child td { border-bottom: 0; }
-.jewelry tbody tr:nth-child(even) { background: #f7faf7; }
-.jewelry thead th {
-  color: #fff;
-  font-size: 13px;
-  font-weight: 800;
-  letter-spacing: 0.6px;
-  text-transform: uppercase;
-  background: var(--green);
-  border-bottom: 0;
-}
-.jewelry tbody th { text-align: left; padding-left: 16px; font-size: 16px; font-weight: 800; width: 22%; color: var(--ink); }
-.jewelry td { font-size: 18px; font-weight: 800; color: var(--green); }
-
-.facts { margin: 0; display: grid; grid-template-columns: max-content 1fr; gap: 12px 18px; }
-.facts dt {
-  color: var(--green-dark);
-  font-size: 13px;
-  font-weight: 800;
-  letter-spacing: 0.6px;
-  text-transform: uppercase;
-  padding-top: 3px;
-}
-.facts dd { margin: 0; font-size: 16px; font-weight: 600; color: var(--ink); }
-.facts-line { margin: 0; }
-
-.pill {
-  display: inline-block;
-  padding: 3px 12px;
-  margin: 2px 0;
-  border: 1px solid var(--line);
-  border-radius: 999px;
-  background: var(--leaf-soft);
-  color: var(--green-dark);
-  font-weight: 800;
-  font-size: 14px;
-  text-decoration: none;
-}
-a.pill { transition: border-color 0.2s ease; }
-a.pill:hover { border-color: var(--green); }
-
-/* ---------- gallery ---------- */
-
-.photos {
-  margin-top: 20px;
-  background: var(--paper);
-  border: 1px solid var(--line);
-  border-radius: var(--radius);
-  box-shadow: var(--shadow);
-  padding: 18px 20px 20px;
-}
-.photos h2 {
-  font-family: var(--display);
-  font-weight: 700;
-  font-size: 22px;
-  color: var(--green-dark);
-  margin: 0 0 12px;
-}
-
-.gallery {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
-  gap: 12px;
-}
-.thumb {
-  padding: 0;
-  border: 0;
-  border-radius: 12px;
-  overflow: hidden;
-  aspect-ratio: 1;
-  background: var(--leaf-soft);
-  box-shadow: 0 0 0 1px var(--line);
-  cursor: zoom-in;
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
-}
-.thumb:hover { transform: scale(1.02); box-shadow: 0 0 0 2px var(--green); }
-.thumb img { width: 100%; height: 100%; object-fit: cover; display: block; }
-
-/* ---------- viewer (dark so photos stand out) ---------- */
-
-.viewer { position: fixed; inset: 0; z-index: 20; background: #0e1a12; }
-.viewer[hidden] { display: none; }
-
-.viewer-stage {
-  position: absolute;
-  inset: 0 0 64px 0;
-  overflow: hidden;
-  touch-action: none;
-  cursor: grab;
-}
-.viewer-stage img {
-  position: absolute;
-  left: 0;
-  top: 0;
-  transform-origin: 0 0;
-  user-select: none;
-  -webkit-user-select: none;
-  -webkit-user-drag: none;
-}
-
-.viewer-bar {
-  position: absolute;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  height: 64px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 16px;
-  color: #cfe0d3;
-  font-size: 13px;
-  font-weight: 700;
-}
-.viewer-bar button {
-  width: 42px;
-  height: 42px;
-  border: 1px solid rgba(207, 224, 211, 0.35);
-  border-radius: 50%;
-  background: #1b2e21;
-  color: #fff;
-  font-size: 18px;
-  cursor: pointer;
-}
-.viewer-bar button:hover { border-color: #cfe0d3; }
-
-/* ---------- mobile ---------- */
-
-@media (max-width: 768px) {
-  body { padding: 26px 12px 44px; }
-  .header h1 { font-size: 36px; }
-  .brand-sub { font-size: 13px; letter-spacing: 3px; }
-  .branch { width: 150px; height: 125px; opacity: 0.7; }
-}
-
-@media (max-width: 520px) {
-  .header { margin-top: 40px; }   /* clear the corner branches */
-  .header h1 { font-size: 32px; }
-  .card { padding: 20px 18px; }
-  .card-head { grid-template-columns: auto 1fr; gap: 14px; }
-  .card-head h1 { font-size: 24px; }
-  .num-badge { width: 50px; height: 50px; font-size: 22px; }
-  .sticker { grid-column: 1 / -1; justify-self: start; }
-  .chip-label { min-width: 100%; }
-  .facts { grid-template-columns: 1fr; gap: 4px; }
-  .facts dd { margin-bottom: 10px; }
-  .row-name { font-size: 16px; }
-}
+  <script src="app.js?v=10"></script>
+</body>
+</html>
