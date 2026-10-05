@@ -1,7 +1,7 @@
 {
   "glossary": {
     "deitySets": ["RK", "JBS", "GG", "GN"],
-    "jewelry": ["jewellery1", "jewellery2", "jewellery3"]
+    "jewelry": ["crowns", "turban pieces", "suryas"]
   },
   "dresses": [
     {
@@ -11,10 +11,10 @@
       "colors": ["blue", "yellow"],
       "nightOutfits": ["E", "P", "I", "R"],
       "jewelry": {
-        "RK":  { "jewellery1": "✓", "jewellery2": "✓", "jewellery3": "✓" },
-        "JBS": { "jewellery1": "S", "jewellery2": "✓" },
-        "GG":  { "jewellery1": "✓" },
-        "GN":  { "jewellery1": "✓" }
+        "RK":  { "crowns": "✓", "turban pieces": "✓", "suryas": "✓" },
+        "JBS": { "crowns": "S", "turban pieces": "✓" },
+        "GG":  { "crowns": "✓" },
+        "GN":  { "crowns": "✓" }
       },
       "backdrop": "See picture above for preferred option"
     }
