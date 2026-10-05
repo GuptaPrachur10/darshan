@@ -3,20 +3,39 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="theme-color" content="#fbf3e4">
+  <meta name="theme-color" content="#eef6f0">
   <title>ISKCON London Darshan Catalog</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Marcellus&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="style.css?v=9">
+  <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@600;700&family=Nunito:wght@500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css?v=11">
 </head>
 <body>
+  <!-- Flowering branches in the top corners. -->
+  <div class="branch branch-left" aria-hidden="true"></div>
+  <div class="branch branch-right" aria-hidden="true"></div>
+
+  <!-- Leaves and petals drifting down behind the content. Pure CSS, no JS. -->
+  <div class="falling" aria-hidden="true">
+    <span class="leaf a" style="--x:6%;  --d:19s; --delay:-2s;  --size:22px; --drift:60px"><i></i></span>
+    <span class="leaf p" style="--x:14%; --d:23s; --delay:-11s; --size:14px; --drift:-40px"><i></i></span>
+    <span class="leaf b" style="--x:22%; --d:17s; --delay:-6s;  --size:18px; --drift:50px"><i></i></span>
+    <span class="leaf w" style="--x:31%; --d:25s; --delay:-15s; --size:13px; --drift:-30px"><i></i></span>
+    <span class="leaf a" style="--x:39%; --d:21s; --delay:-9s;  --size:20px; --drift:70px"><i></i></span>
+    <span class="leaf p" style="--x:48%; --d:18s; --delay:-1s;  --size:15px; --drift:-55px"><i></i></span>
+    <span class="leaf b" style="--x:57%; --d:24s; --delay:-13s; --size:21px; --drift:45px"><i></i></span>
+    <span class="leaf w" style="--x:65%; --d:20s; --delay:-7s;  --size:12px; --drift:-35px"><i></i></span>
+    <span class="leaf a" style="--x:73%; --d:22s; --delay:-17s; --size:19px; --drift:55px"><i></i></span>
+    <span class="leaf p" style="--x:81%; --d:16s; --delay:-4s;  --size:14px; --drift:-45px"><i></i></span>
+    <span class="leaf b" style="--x:89%; --d:26s; --delay:-20s; --size:17px; --drift:40px"><i></i></span>
+    <span class="leaf a" style="--x:95%; --d:19s; --delay:-12s; --size:16px; --drift:-60px"><i></i></span>
+  </div>
+
   <header class="header">
     <a href="#/" class="brand">
-      <span class="brand-sub">ISKCON London</span>
-      <h1>Darshan Catalog</h1>
+      <h1>ISKCON London</h1>
+      <span class="brand-sub">Darshan Catalog</span>
     </a>
-    <div class="ornament" aria-hidden="true"><span>❀</span></div>
   </header>
 
   <main id="app" aria-live="polite">
@@ -36,6 +55,6 @@
     </div>
   </div>
 
-  <script src="app.js?v=8"></script>
+  <script src="app.js?v=10"></script>
 </body>
 </html>
