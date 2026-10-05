@@ -187,7 +187,6 @@ function renderHome() {
       ${chipGroup('Weather', 'weather', [
         { value: 'hot', label: 'Hot' }, { value: 'cold', label: 'Cold' }])}
       ${chipGroup('Deity set', 'deity', (g.deitySets || []).map((s) => ({ value: s, label: s })))}
-      ${chipGroup('Jewellery', 'jewel', (g.jewelry || []).map((j) => ({ value: j, label: j })))}
       ${chipGroup('Color', 'color', allColors().map((c) => ({ value: c, label: c })))}
     </section>
     <p id="count" class="count"></p>
@@ -213,14 +212,8 @@ function matches(d) {
   if (q && !String(d.id).startsWith(q) && !String(d.name || '').toLowerCase().includes(q)) return false;
   if (f.weather && d.weather !== f.weather && d.weather !== 'both') return false;
 
-  const jw = d.jewelry || {};
-  if (f.deity && f.jewel) {
-    if (!(jw[f.deity] && jw[f.deity][f.jewel])) return false;
-  } else if (f.deity) {
-    if (!jw[f.deity] || !Object.keys(jw[f.deity]).length) return false;
-  } else if (f.jewel) {
-    if (!Object.values(jw).some((row) => row && row[f.jewel])) return false;
-  }
+  const row = (d.jewelry || {})[f.deity];
+  if (f.deity && (!row || !Object.keys(row).length)) return false;
 
   if (f.color && !(d.colors || []).some((c) => String(c).toLowerCase() === f.color)) return false;
   return true;
@@ -618,5 +611,3 @@ async function start() {
   window.addEventListener('hashchange', route);
   route();
 }
-
-start();
