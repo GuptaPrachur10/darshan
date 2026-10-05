@@ -611,3 +611,5 @@ async function start() {
   window.addEventListener('hashchange', route);
   route();
 }
+
+start();
