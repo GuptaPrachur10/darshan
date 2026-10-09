@@ -11,12 +11,26 @@
       "colors": ["blue", "yellow"],
       "nightOutfits": ["E", "P", "I", "R"],
       "jewelry": {
-        "RK":  { "crowns": "✓", "turban pieces": "✓", "suryas": "✓" },
-        "JBS": { "crowns": "S", "turban pieces": "✓" },
-        "GG":  { "crowns": "✓" },
-        "GN":  { "crowns": "✓" }
+        "RK": {"crowns": "✓", "turban pieces": "✓", "suryas": "✓"},
+        "JBS": {"crowns": "S", "turban pieces": "✓"},
+        "GG": {"crowns": "✓"},
+        "GN": {"crowns": "✓"}
       },
       "backdrop": "See picture above for preferred option"
+    },
+    {
+      "id": 2,
+      "name": "Viraha Bhava",
+      "weather": "cold",
+      "colors": ["green", "red"],
+      "nightOutfits": ["O", "S"],
+      "jewelry": {
+        "RK": {"crowns": "✓"},
+        "JBS": {"crowns": "S", "turban pieces": "✓"},
+        "GG": {"crowns": "✓"},
+        "GN": {"crowns": "✓"}
+      },
+      "backdrop": "No See above picture for preferred option."
     },
     {
       "id": 3,
@@ -25,10 +39,10 @@
       "colors": ["blue", "pink", "silver"],
       "nightOutfits": ["C", "H", "P"],
       "jewelry": {
-        "RK":  { "crowns": "✓", "suryas": "✓" },
-        "JBS": { "crowns": "✓" },
-        "GG":  { "crowns": "✓" },
-        "GN":  { "crowns": "✓" }
+        "RK": {"crowns": "✓", "suryas": "✓"},
+        "JBS": {"crowns": "✓"},
+        "GG": {"crowns": "✓"},
+        "GN": {"crowns": "✓"}
       },
       "backdrop": "Yes"
     },
@@ -39,12 +53,26 @@
       "colors": ["orange", "green"],
       "nightOutfits": ["J", "M", "N"],
       "jewelry": {
-        "RK":  { "crowns": "✓", "turban pieces": "✓", "suryas": "✓" },
-        "JBS": { "crowns": "✓", "turban pieces": "✓" },
-        "GG":  { "crowns": "✓" },
-        "GN":  { "crowns": "✓" }
+        "RK": {"crowns": "✓", "turban pieces": "✓", "suryas": "✓"},
+        "JBS": {"crowns": "✓", "turban pieces": "✓"},
+        "GG": {"crowns": "✓"},
+        "GN": {"crowns": "✓"}
       },
       "backdrop": "Yes"
+    },
+    {
+      "id": 5,
+      "name": "Aqua & Silver Butterflies",
+      "weather": "hot",
+      "colors": ["turquoise", "silver"],
+      "nightOutfits": ["B", "C", "P", "L"],
+      "jewelry": {
+        "RK": {"crowns": "✓"},
+        "JBS": {"crowns": "✓"},
+        "GG": {"crowns": "✓"},
+        "GN": {"crowns": "✓"}
+      },
+      "backdrop": "yes"
     },
     {
       "id": 6,
@@ -53,10 +81,10 @@
       "colors": ["pink", "purple"],
       "nightOutfits": ["H", "F", "K", "A", "G"],
       "jewelry": {
-        "RK":  { "crowns": "Gold", "turban pieces": "Gold", "suryas": "Gold" },
-        "JBS": { "crowns": "Gold", "turban pieces": "✓" },
-        "GG":  { "crowns": "Gold", "turban pieces": "Gold" },
-        "GN":  { "crowns": "Gold", "turban pieces": "Gold" }
+        "RK": {"crowns": "Gold", "turban pieces": "Gold", "suryas": "Gold"},
+        "JBS": {"crowns": "Gold", "turban pieces": "✓"},
+        "GG": {"crowns": "Gold", "turban pieces": "Gold"},
+        "GN": {"crowns": "Gold", "turban pieces": "Gold"}
       },
       "backdrop": "Yes"
     },
@@ -67,10 +95,10 @@
       "colors": ["gold"],
       "nightOutfits": ["R", "S"],
       "jewelry": {
-        "RK":  { "crowns": "✓", "turban pieces": "✓", "suryas": "✓" },
-        "JBS": { "crowns": "S", "turban pieces": "✓" },
-        "GG":  { "crowns": "✓" },
-        "GN":  { "crowns": "✓" }
+        "RK": {"crowns": "✓", "turban pieces": "✓", "suryas": "✓"},
+        "JBS": {"crowns": "S", "turban pieces": "✓"},
+        "GG": {"crowns": "✓"},
+        "GN": {"crowns": "✓"}
       },
       "backdrop": "No. See above picture for preferred option. (Note: Any backdrop colour would work, provided the garlands match with the backdrop)"
     },
@@ -81,12 +109,26 @@
       "colors": ["orange"],
       "nightOutfits": ["D", "J", "G", "S"],
       "jewelry": {
-        "RK":  { "crowns": "✓", "turban pieces": "✓", "suryas": "✓" },
-        "JBS": { "crowns": "S", "turban pieces": "✓" },
-        "GG":  { "crowns": "✓" },
-        "GN":  { "crowns": "✓" }
+        "RK": {"crowns": "✓", "turban pieces": "✓", "suryas": "✓"},
+        "JBS": {"crowns": "S", "turban pieces": "✓"},
+        "GG": {"crowns": "✓"},
+        "GN": {"crowns": "✓"}
       },
       "backdrop": "Yes"
+    },
+    {
+      "id": 9,
+      "name": "Multicolour on Hot Pink",
+      "weather": "both",
+      "colors": ["pink", "yellow", "blue"],
+      "nightOutfits": ["D", "P", "J", "I"],
+      "jewelry": {
+        "RK": {"crowns": "✓"},
+        "JBS": {"crowns": "S"},
+        "GG": {"crowns": "✓"},
+        "GN": {"crowns": "✓"}
+      },
+      "backdrop": "No See above picture for preferred option."
     },
     {
       "id": 10,
@@ -95,10 +137,10 @@
       "colors": ["blue", "purple", "green"],
       "nightOutfits": ["A", "E", "K", "Q"],
       "jewelry": {
-        "RK":  { "crowns": "✓" },
-        "JBS": { "crowns": "S", "turban pieces": "✓" },
-        "GG":  { "crowns": "✓" },
-        "GN":  { "crowns": "✓" }
+        "RK": {"crowns": "✓"},
+        "JBS": {"crowns": "S", "turban pieces": "✓"},
+        "GG": {"crowns": "✓"},
+        "GN": {"crowns": "✓"}
       },
       "backdrop": "Yes"
     },
@@ -109,10 +151,10 @@
       "colors": ["white", "silver", "multicolor"],
       "nightOutfits": ["B", "J", "N", "L"],
       "jewelry": {
-        "RK":  { "crowns": "✓", "turban pieces": "✓", "suryas": "✓" },
-        "JBS": { "crowns": "✓", "turban pieces": "✓" },
-        "GG":  { "crowns": "✓" },
-        "GN":  { "crowns": "✓" }
+        "RK": {"crowns": "✓", "turban pieces": "✓", "suryas": "✓"},
+        "JBS": {"crowns": "✓", "turban pieces": "✓"},
+        "GG": {"crowns": "✓"},
+        "GN": {"crowns": "✓"}
       },
       "backdrop": "Yes"
     },
@@ -123,10 +165,37 @@
       "colors": ["purple", "blue"],
       "nightOutfits": ["K", "Q", "A", "P"],
       "jewelry": {
-        "RK":  { "crowns": "✓" },
-        "JBS": { "crowns": "✓" },
-        "GG":  { "crowns": "✓" },
-        "GN":  { "crowns": "✓" }
+        "RK": {"crowns": "✓"},
+        "JBS": {"crowns": "✓"},
+        "GG": {"crowns": "✓"},
+        "GN": {"crowns": "✓"}
+      },
+      "backdrop": "Yes"
+    },
+    {
+      "id": 13,
+      "name": "Palace Garden",
+      "weather": "both",
+      "colors": ["pink", "yellow", "blue"],
+      "nightOutfits": ["D", "E", "H", "S"],
+      "jewelry": {
+        "RK": {"crowns": "✓", "turban pieces": "✓"},
+        "JBS": {"crowns": "S", "turban pieces": "✓"},
+        "GG": {"crowns": "✓"},
+        "GN": {"crowns": "✓"}
+      },
+      "backdrop": "Yes"
+    },
+    {
+      "id": 14,
+      "name": "Coloured Silver",
+      "weather": "both",
+      "colors": ["silver", "pink", "blue"],
+      "nightOutfits": ["B", "F", "P"],
+      "jewelry": {
+        "RK": {"crowns": "✓"},
+        "GG": {"crowns": "✓"},
+        "GN": {"crowns": "✓"}
       },
       "backdrop": "Yes"
     },
@@ -137,12 +206,54 @@
       "colors": ["maroon", "gold"],
       "nightOutfits": ["D", "O", "R", "S"],
       "jewelry": {
-        "RK":  { "crowns": "✓" },
-        "JBS": { "crowns": "S" },
-        "GG":  { "crowns": "✓" },
-        "GN":  { "crowns": "✓" }
+        "RK": {"crowns": "✓"},
+        "JBS": {"crowns": "S"},
+        "GG": {"crowns": "✓"},
+        "GN": {"crowns": "✓"}
       },
       "backdrop": "Yes"
+    },
+    {
+      "id": 16,
+      "name": "Sequin Rainbow",
+      "weather": "both",
+      "colors": ["rainbow", "white"],
+      "nightOutfits": ["D", "E", "I", "C"],
+      "jewelry": {
+        "RK": {"crowns": "✓"},
+        "JBS": {"crowns": "S", "turban pieces": "✓"},
+        "GG": {"crowns": "✓"},
+        "GN": {"crowns": "✓"}
+      },
+      "backdrop": "No See above picture for preferred option."
+    },
+    {
+      "id": 17,
+      "name": "White & Aqua",
+      "weather": "both",
+      "colors": ["white", "aqua"],
+      "nightOutfits": ["D", "H", "P", "S"],
+      "jewelry": {
+        "RK": {"crowns": "✓"},
+        "JBS": {"crowns": "S", "turban pieces": "✓"},
+        "GG": {"crowns": "✓"},
+        "GN": {"crowns": "✓"}
+      },
+      "backdrop": "Yes"
+    },
+    {
+      "id": 18,
+      "name": "Rustic Gold",
+      "weather": "both",
+      "colors": ["gold", "red"],
+      "nightOutfits": ["G", "R", "S"],
+      "jewelry": {
+        "RK": {"crowns": "✓", "turban pieces": "✓"},
+        "JBS": {"crowns": "S", "turban pieces": "✓"},
+        "GG": {"crowns": "✓"},
+        "GN": {"crowns": "✓"}
+      },
+      "backdrop": "No See above picture for preferred option."
     },
     {
       "id": 19,
@@ -151,10 +262,10 @@
       "colors": ["green", "pink", "purple"],
       "nightOutfits": ["F", "L", "M", "J"],
       "jewelry": {
-        "RK":  { "crowns": "✓", "turban pieces": "✓", "suryas": "✓" },
-        "JBS": { "crowns": "S", "turban pieces": "✓" },
-        "GG":  { "crowns": "✓" },
-        "GN":  { "crowns": "✓" }
+        "RK": {"crowns": "✓", "turban pieces": "✓", "suryas": "✓"},
+        "JBS": {"crowns": "S", "turban pieces": "✓"},
+        "GG": {"crowns": "✓"},
+        "GN": {"crowns": "✓"}
       },
       "backdrop": "Yes"
     },
@@ -165,10 +276,10 @@
       "colors": ["pink", "blue"],
       "nightOutfits": ["E", "P", "R"],
       "jewelry": {
-        "RK":  { "crowns": "✓" },
-        "JBS": { "crowns": "✓" },
-        "GG":  { "crowns": "✓" },
-        "GN":  { "crowns": "✓" }
+        "RK": {"crowns": "✓"},
+        "JBS": {"crowns": "✓"},
+        "GG": {"crowns": "✓"},
+        "GN": {"crowns": "✓"}
       },
       "backdrop": "Yes"
     },
@@ -179,12 +290,26 @@
       "colors": ["green", "gold", "multicolor"],
       "nightOutfits": ["A", "D", "K", "M", "I", "S"],
       "jewelry": {
-        "RK":  { "crowns": "✓", "turban pieces": "✓" },
-        "JBS": { "crowns": "S", "turban pieces": "✓" },
-        "GG":  { "crowns": "✓" },
-        "GN":  { "crowns": "✓" }
+        "RK": {"crowns": "✓", "turban pieces": "✓"},
+        "JBS": {"crowns": "S", "turban pieces": "✓"},
+        "GG": {"crowns": "✓"},
+        "GN": {"crowns": "✓"}
       },
       "backdrop": "No. See above picture for preferred option"
+    },
+    {
+      "id": 22,
+      "name": "Royal Elephants",
+      "weather": "cold",
+      "colors": ["white", "pink", "green", "gold"],
+      "nightOutfits": ["A", "H", "J"],
+      "jewelry": {
+        "RK": {"crowns": "✓", "turban pieces": "✓", "suryas": "✓"},
+        "JBS": {"crowns": "S", "turban pieces": "✓"},
+        "GG": {"crowns": "✓"},
+        "GN": {"crowns": "✓"}
+      },
+      "backdrop": "Yes"
     },
     {
       "id": 23,
@@ -193,10 +318,24 @@
       "colors": ["cream", "black", "multicolor"],
       "nightOutfits": ["J", "L", "O"],
       "jewelry": {
-        "RK":  { "crowns": "✓", "turban pieces": "✓" },
-        "JBS": { "crowns": "S", "turban pieces": "✓" },
-        "GG":  { "crowns": "✓" },
-        "GN":  { "crowns": "✓" }
+        "RK": {"crowns": "✓", "turban pieces": "✓"},
+        "JBS": {"crowns": "S", "turban pieces": "✓"},
+        "GG": {"crowns": "✓"},
+        "GN": {"crowns": "✓"}
+      },
+      "backdrop": "Yes"
+    },
+    {
+      "id": 24,
+      "name": "Orange with Parrots",
+      "weather": "both",
+      "colors": ["orange", "green"],
+      "nightOutfits": ["I", "J"],
+      "jewelry": {
+        "RK": {"crowns": "✓", "turban pieces": "✓"},
+        "JBS": {"crowns": "S", "turban pieces": "✓"},
+        "GG": {"crowns": "✓"},
+        "GN": {"crowns": "✓"}
       },
       "backdrop": "Yes"
     },
@@ -207,10 +346,24 @@
       "colors": ["blue", "yellow"],
       "nightOutfits": ["P", "N", "J"],
       "jewelry": {
-        "RK":  { "crowns": "✓", "turban pieces": "✓", "suryas": "✓" },
-        "JBS": { "crowns": "S", "turban pieces": "✓" },
-        "GG":  { "crowns": "✓" },
-        "GN":  { "crowns": "✓" }
+        "RK": {"crowns": "✓", "turban pieces": "✓", "suryas": "✓"},
+        "JBS": {"crowns": "S", "turban pieces": "✓"},
+        "GG": {"crowns": "✓"},
+        "GN": {"crowns": "✓"}
+      },
+      "backdrop": "Yes"
+    },
+    {
+      "id": 26,
+      "name": "Grapevines on Silvery Grey",
+      "weather": "both",
+      "colors": ["grey", "purple"],
+      "nightOutfits": ["A", "K", "L"],
+      "jewelry": {
+        "RK": {"crowns": "✓", "turban pieces": "✓", "suryas": "✓"},
+        "JBS": {"crowns": "S", "turban pieces": "✓"},
+        "GG": {"crowns": "✓"},
+        "GN": {"crowns": "✓"}
       },
       "backdrop": "Yes"
     },
@@ -221,10 +374,52 @@
       "colors": ["copper", "multicolor"],
       "nightOutfits": ["C", "D", "H", "P", "S"],
       "jewelry": {
-        "RK":  { "crowns": "✓" },
-        "JBS": { "crowns": "S", "turban pieces": "✓" },
-        "GG":  { "crowns": "✓" },
-        "GN":  { "crowns": "✓" }
+        "RK": {"crowns": "✓"},
+        "JBS": {"crowns": "S", "turban pieces": "✓"},
+        "GG": {"crowns": "✓"},
+        "GN": {"crowns": "✓"}
+      },
+      "backdrop": "Yes"
+    },
+    {
+      "id": 28,
+      "name": "Gita Govinda",
+      "weather": "both",
+      "colors": ["yellow", "red"],
+      "nightOutfits": ["J", "R", "A"],
+      "jewelry": {
+        "RK": {"crowns": "✓"},
+        "JBS": {"crowns": "S", "turban pieces": "✓"},
+        "GG": {"crowns": "✓"},
+        "GN": {"crowns": "✓"}
+      },
+      "backdrop": "Yes"
+    },
+    {
+      "id": 29,
+      "name": "Rajasthani",
+      "weather": "both",
+      "colors": ["red", "orange"],
+      "nightOutfits": ["P", "R"],
+      "jewelry": {
+        "RK": {"crowns": "✓"},
+        "JBS": {"crowns": "S", "turban pieces": "✓"},
+        "GG": {"crowns": "✓"},
+        "GN": {"crowns": "✓"}
+      },
+      "backdrop": "Yes"
+    },
+    {
+      "id": 30,
+      "name": "Royal Red",
+      "weather": "both",
+      "colors": ["red", "gold"],
+      "nightOutfits": ["D", "H", "F", "S"],
+      "jewelry": {
+        "RK": {"crowns": "✓", "turban pieces": "✓", "suryas": "✓"},
+        "JBS": {"crowns": "✓", "turban pieces": "✓"},
+        "GG": {"crowns": "✓"},
+        "GN": {"crowns": "✓"}
       },
       "backdrop": "Yes"
     },
@@ -235,10 +430,10 @@
       "colors": ["blue", "yellow", "white"],
       "nightOutfits": ["C", "N", "J", "A", "H"],
       "jewelry": {
-        "RK":  { "crowns": "✓", "turban pieces": "✓", "suryas": "✓" },
-        "JBS": { "crowns": "S", "turban pieces": "✓" },
-        "GG":  { "crowns": "✓" },
-        "GN":  { "crowns": "✓" }
+        "RK": {"crowns": "✓", "turban pieces": "✓", "suryas": "✓"},
+        "JBS": {"crowns": "S", "turban pieces": "✓"},
+        "GG": {"crowns": "✓"},
+        "GN": {"crowns": "✓"}
       },
       "backdrop": "Yes"
     },
@@ -249,10 +444,10 @@
       "colors": ["yellow", "purple"],
       "nightOutfits": ["K", "N", "A", "B"],
       "jewelry": {
-        "RK":  { "crowns": "✓", "turban pieces": "✓", "suryas": "✓" },
-        "JBS": { "crowns": "✓", "turban pieces": "✓" },
-        "GG":  { "crowns": "✓", "suryas": "✓" },
-        "GN":  { "crowns": "✓", "suryas": "✓" }
+        "RK": {"crowns": "✓", "turban pieces": "✓", "suryas": "✓"},
+        "JBS": {"crowns": "✓", "turban pieces": "✓"},
+        "GG": {"crowns": "✓", "suryas": "✓"},
+        "GN": {"crowns": "✓", "suryas": "✓"}
       },
       "backdrop": "Yes"
     },
@@ -263,10 +458,10 @@
       "colors": ["turquoise", "gold"],
       "nightOutfits": ["P", "H", "B", "M"],
       "jewelry": {
-        "RK":  { "crowns": "✓" },
-        "JBS": { "crowns": "✓" },
-        "GG":  { "crowns": "✓" },
-        "GN":  { "crowns": "✓" }
+        "RK": {"crowns": "✓"},
+        "JBS": {"crowns": "✓"},
+        "GG": {"crowns": "✓"},
+        "GN": {"crowns": "✓"}
       },
       "backdrop": "Yes"
     },
@@ -277,10 +472,10 @@
       "colors": ["green", "pink", "yellow"],
       "nightOutfits": ["I", "M", "J"],
       "jewelry": {
-        "RK":  { "crowns": "✓", "suryas": "✓" },
-        "JBS": { "crowns": "✓" },
-        "GG":  { "crowns": "✓" },
-        "GN":  { "crowns": "✓" }
+        "RK": {"crowns": "✓", "suryas": "✓"},
+        "JBS": {"crowns": "✓"},
+        "GG": {"crowns": "✓"},
+        "GN": {"crowns": "✓"}
       },
       "backdrop": "Yes"
     },
@@ -291,10 +486,52 @@
       "colors": ["pink", "cream"],
       "nightOutfits": ["D", "M", "R", "I"],
       "jewelry": {
-        "RK":  { "crowns": "✓", "turban pieces": "✓", "suryas": "✓" },
-        "JBS": { "crowns": "✓", "turban pieces": "✓", "suryas": "✓" },
-        "GG":  { "crowns": "✓" },
-        "GN":  { "crowns": "✓" }
+        "RK": {"crowns": "✓", "turban pieces": "✓", "suryas": "✓"},
+        "JBS": {"crowns": "✓", "turban pieces": "✓", "suryas": "✓"},
+        "GG": {"crowns": "✓"},
+        "GN": {"crowns": "✓"}
+      },
+      "backdrop": "Yes"
+    },
+    {
+      "id": 36,
+      "name": "Londonisvara",
+      "weather": "cold",
+      "colors": ["navy", "gold"],
+      "nightOutfits": ["D", "E", "S"],
+      "jewelry": {
+        "RK": {"crowns": "✓", "turban pieces": "✓", "suryas": "✓"},
+        "JBS": {"crowns": "✓", "turban pieces": "✓"},
+        "GG": {"crowns": "✓"},
+        "GN": {"crowns": "✓"}
+      },
+      "backdrop": "Yes"
+    },
+    {
+      "id": 37,
+      "name": "Royal Jalli",
+      "weather": "cold",
+      "colors": ["white", "gold"],
+      "nightOutfits": ["O", "R", "S"],
+      "jewelry": {
+        "RK": {"crowns": "✓", "turban pieces": "✓", "suryas": "✓"},
+        "JBS": {"crowns": "✓"},
+        "GG": {"crowns": "✓"},
+        "GN": {"crowns": "✓"}
+      },
+      "backdrop": "Yes"
+    },
+    {
+      "id": 38,
+      "name": "Midnight Sparkle",
+      "weather": "cold",
+      "colors": ["blue", "silver"],
+      "nightOutfits": ["B"],
+      "jewelry": {
+        "RK": {"crowns": "✓"},
+        "JBS": {"crowns": "S", "turban pieces": "✓"},
+        "GG": {"crowns": "✓"},
+        "GN": {"crowns": "✓"}
       },
       "backdrop": "Yes"
     },
@@ -305,10 +542,38 @@
       "colors": ["yellow", "lime", "green"],
       "nightOutfits": ["I", "J"],
       "jewelry": {
-        "RK":  { "crowns": "Silver", "turban pieces": "✓" },
-        "JBS": { "crowns": "✓", "turban pieces": "✓" },
-        "GG":  { "crowns": "✓" },
-        "GN":  { "crowns": "✓" }
+        "RK": {"crowns": "Silver", "turban pieces": "✓"},
+        "JBS": {"crowns": "✓", "turban pieces": "✓"},
+        "GG": {"crowns": "✓"},
+        "GN": {"crowns": "✓"}
+      },
+      "backdrop": "Yes"
+    },
+    {
+      "id": 40,
+      "name": "Snow Flakes",
+      "weather": "both",
+      "colors": ["blue", "white", "silver"],
+      "nightOutfits": ["B"],
+      "jewelry": {
+        "RK": {"crowns": "✓"},
+        "JBS": {"crowns": "✓"},
+        "GG": {"crowns": "✓"},
+        "GN": {"crowns": "✓"}
+      },
+      "backdrop": "Yes"
+    },
+    {
+      "id": 41,
+      "name": "Orchids",
+      "weather": "both",
+      "colors": ["pink", "gold"],
+      "nightOutfits": ["H", "N", "K"],
+      "jewelry": {
+        "RK": {"crowns": "✓", "turban pieces": "✓", "suryas": "✓"},
+        "JBS": {"crowns": "S", "turban pieces": "✓"},
+        "GG": {"crowns": "✓"},
+        "GN": {"crowns": "✓"}
       },
       "backdrop": "Yes"
     },
@@ -319,10 +584,10 @@
       "colors": ["purple", "orange", "multicolor"],
       "nightOutfits": ["A", "G", "K", "S"],
       "jewelry": {
-        "RK":  { "crowns": "✓", "turban pieces": "✓" },
-        "JBS": { "crowns": "S", "turban pieces": "✓" },
-        "GG":  { "crowns": "✓" },
-        "GN":  { "crowns": "✓" }
+        "RK": {"crowns": "✓", "turban pieces": "✓"},
+        "JBS": {"crowns": "S", "turban pieces": "✓"},
+        "GG": {"crowns": "✓"},
+        "GN": {"crowns": "✓"}
       },
       "backdrop": "Yes"
     },
@@ -333,12 +598,40 @@
       "colors": ["green", "pink"],
       "nightOutfits": ["L", "M"],
       "jewelry": {
-        "RK":  { "crowns": "✓", "turban pieces": "✓", "suryas": "✓" },
-        "JBS": { "crowns": "✓" },
-        "GG":  { "crowns": "✓" },
-        "GN":  { "crowns": "✓" }
+        "RK": {"crowns": "✓", "turban pieces": "✓", "suryas": "✓"},
+        "JBS": {"crowns": "✓"},
+        "GG": {"crowns": "✓"},
+        "GN": {"crowns": "✓"}
       },
       "backdrop": "Yes"
+    },
+    {
+      "id": 44,
+      "name": "Yellow & Purple",
+      "weather": "both",
+      "colors": ["yellow", "purple"],
+      "nightOutfits": ["K", "A"],
+      "jewelry": {
+        "RK": {"crowns": "✓", "turban pieces": "✓"},
+        "JBS": {"crowns": "S", "turban pieces": "✓"},
+        "GG": {"crowns": "✓"},
+        "GN": {"crowns": "✓"}
+      },
+      "backdrop": "Yes"
+    },
+    {
+      "id": 45,
+      "name": "Red Tartan",
+      "weather": "both",
+      "colors": ["red", "gold"],
+      "nightOutfits": ["O", "R"],
+      "jewelry": {
+        "RK": {"crowns": "Gold", "turban pieces": "Gold", "suryas": "Gold"},
+        "JBS": {"crowns": "Gold", "turban pieces": "✓"},
+        "GG": {"crowns": "✓"},
+        "GN": {"crowns": "✓"}
+      },
+      "backdrop": "No"
     },
     {
       "id": 46,
@@ -347,10 +640,52 @@
       "colors": ["pink", "silver"],
       "nightOutfits": ["F", "H", "L"],
       "jewelry": {
-        "RK":  { "crowns": "✓" },
-        "JBS": { "crowns": "✓" },
-        "GG":  { "crowns": "✓" },
-        "GN":  { "crowns": "✓" }
+        "RK": {"crowns": "✓"},
+        "JBS": {"crowns": "✓"},
+        "GG": {"crowns": "✓"},
+        "GN": {"crowns": "✓"}
+      },
+      "backdrop": "Yes"
+    },
+    {
+      "id": 47,
+      "name": "Mirrors & Fuschia",
+      "weather": "both",
+      "colors": ["fuschia", "gold"],
+      "nightOutfits": ["D", "R"],
+      "jewelry": {
+        "RK": {"crowns": "✓", "turban pieces": "✓"},
+        "JBS": {"crowns": "S", "turban pieces": "✓"},
+        "GG": {"crowns": "✓"},
+        "GN": {"crowns": "✓"}
+      },
+      "backdrop": "No"
+    },
+    {
+      "id": 48,
+      "name": "Purple & Orange",
+      "weather": "both",
+      "colors": ["purple", "orange"],
+      "nightOutfits": ["K"],
+      "jewelry": {
+        "RK": {"crowns": "✓", "turban pieces": "✓", "suryas": "✓"},
+        "JBS": {"crowns": "S", "turban pieces": "✓"},
+        "GG": {"crowns": "✓"},
+        "GN": {"crowns": "✓"}
+      },
+      "backdrop": "Yes"
+    },
+    {
+      "id": 49,
+      "name": "Umaraha",
+      "weather": "both",
+      "colors": ["green", "blue", "gold"],
+      "nightOutfits": ["E", "M", "S"],
+      "jewelry": {
+        "RK": {"crowns": "✓"},
+        "JBS": {"crowns": "S"},
+        "GG": {"crowns": "✓"},
+        "GN": {"crowns": "✓"}
       },
       "backdrop": "Yes"
     },
@@ -361,10 +696,10 @@
       "colors": ["pink", "gold", "green"],
       "nightOutfits": ["H"],
       "jewelry": {
-        "RK":  { "crowns": "✓", "turban pieces": "✓" },
-        "JBS": { "crowns": "S" },
-        "GG":  { "crowns": "✓" },
-        "GN":  { "crowns": "✓" }
+        "RK": {"crowns": "✓", "turban pieces": "✓"},
+        "JBS": {"crowns": "S"},
+        "GG": {"crowns": "✓"},
+        "GN": {"crowns": "✓"}
       },
       "backdrop": "No. See above picture for preferred option."
     },
@@ -375,10 +710,10 @@
       "colors": ["blue", "gold"],
       "nightOutfits": ["E", "K", "P"],
       "jewelry": {
-        "RK":  { "crowns": "Gold", "turban pieces": "Gold" },
-        "JBS": { "crowns": "Gold", "turban pieces": "Gold" },
-        "GG":  { "crowns": "Gold" },
-        "GN":  { "crowns": "Gold" }
+        "RK": {"crowns": "Gold", "turban pieces": "Gold"},
+        "JBS": {"crowns": "Gold", "turban pieces": "Gold"},
+        "GG": {"crowns": "Gold"},
+        "GN": {"crowns": "Gold"}
       },
       "backdrop": "Yes"
     },
@@ -389,9 +724,9 @@
       "colors": ["purple", "orange", "gold"],
       "nightOutfits": ["G", "R", "S"],
       "jewelry": {
-        "RK":  { "crowns": "✓" },
-        "JBS": { "crowns": "✓" },
-        "GG":  { "crowns": "✓" }
+        "RK": {"crowns": "✓"},
+        "JBS": {"crowns": "✓"},
+        "GG": {"crowns": "✓"}
       },
       "backdrop": "Yes"
     },
@@ -402,10 +737,10 @@
       "colors": ["red", "white"],
       "nightOutfits": ["B"],
       "jewelry": {
-        "RK":  { "crowns": "✓", "turban pieces": "✓", "suryas": "✓" },
-        "JBS": { "crowns": "S", "turban pieces": "✓" },
-        "GG":  { "crowns": "✓" },
-        "GN":  { "crowns": "✓" }
+        "RK": {"crowns": "✓", "turban pieces": "✓", "suryas": "✓"},
+        "JBS": {"crowns": "S", "turban pieces": "✓"},
+        "GG": {"crowns": "✓"},
+        "GN": {"crowns": "✓"}
       },
       "backdrop": "Yes"
     },
@@ -416,10 +751,10 @@
       "colors": ["pink", "orange"],
       "nightOutfits": ["F", "B"],
       "jewelry": {
-        "RK":  { "crowns": "✓", "turban pieces": "✓", "suryas": "✓" },
-        "JBS": { "crowns": "S", "turban pieces": "✓" },
-        "GG":  { "crowns": "✓" },
-        "GN":  { "crowns": "✓" }
+        "RK": {"crowns": "✓", "turban pieces": "✓", "suryas": "✓"},
+        "JBS": {"crowns": "S", "turban pieces": "✓"},
+        "GG": {"crowns": "✓"},
+        "GN": {"crowns": "✓"}
       },
       "backdrop": "No. See above picture for preferred option."
     },
@@ -430,10 +765,10 @@
       "colors": ["blue"],
       "nightOutfits": ["P"],
       "jewelry": {
-        "RK":  { "crowns": "✓" },
-        "JBS": { "crowns": "S", "turban pieces": "✓" },
-        "GG":  { "crowns": "✓" },
-        "GN":  { "crowns": "✓" }
+        "RK": {"crowns": "✓"},
+        "JBS": {"crowns": "S", "turban pieces": "✓"},
+        "GG": {"crowns": "✓"},
+        "GN": {"crowns": "✓"}
       },
       "backdrop": "Yes"
     },
@@ -444,10 +779,52 @@
       "colors": ["green", "white"],
       "nightOutfits": ["L", "N"],
       "jewelry": {
-        "RK":  { "crowns": "✓", "turban pieces": "✓" },
-        "JBS": { "crowns": "✓", "turban pieces": "✓" },
-        "GG":  { "crowns": "✓" },
-        "GN":  { "crowns": "✓" }
+        "RK": {"crowns": "✓", "turban pieces": "✓"},
+        "JBS": {"crowns": "✓", "turban pieces": "✓"},
+        "GG": {"crowns": "✓"},
+        "GN": {"crowns": "✓"}
+      },
+      "backdrop": "Yes"
+    },
+    {
+      "id": 58,
+      "name": "Turquoise & Pearls",
+      "weather": "both",
+      "colors": ["turquoise", "white"],
+      "nightOutfits": ["B", "P"],
+      "jewelry": {
+        "RK": {"crowns": "✓", "turban pieces": "✓", "suryas": "✓"},
+        "JBS": {"crowns": "S", "turban pieces": "✓"},
+        "GG": {"crowns": "✓"},
+        "GN": {"crowns": "✓"}
+      },
+      "backdrop": "No"
+    },
+    {
+      "id": 59,
+      "name": "Velvet with Jewels",
+      "weather": "cold",
+      "colors": ["navy", "yellow", "blue"],
+      "nightOutfits": ["E", "J"],
+      "jewelry": {
+        "RK": {"crowns": "✓", "suryas": "✓"},
+        "JBS": {"crowns": "S", "turban pieces": "✓"},
+        "GG": {"crowns": "✓"},
+        "GN": {"crowns": "✓"}
+      },
+      "backdrop": "No See above picture for preferred option"
+    },
+    {
+      "id": 60,
+      "name": "Lotus Jalli",
+      "weather": "both",
+      "colors": ["pink", "gold"],
+      "nightOutfits": ["H", "F", "L"],
+      "jewelry": {
+        "RK": {"crowns": "✓", "suryas": "✓"},
+        "JBS": {"crowns": "✓"},
+        "GG": {"crowns": "✓"},
+        "GN": {"crowns": "✓"}
       },
       "backdrop": "Yes"
     },
@@ -458,10 +835,10 @@
       "colors": ["pink", "purple", "green"],
       "nightOutfits": ["K", "M", "A"],
       "jewelry": {
-        "RK":  { "crowns": "✓", "turban pieces": "✓", "suryas": "✓" },
-        "JBS": { "crowns": "S", "turban pieces": "✓" },
-        "GG":  { "crowns": "✓" },
-        "GN":  { "crowns": "✓" }
+        "RK": {"crowns": "✓", "turban pieces": "✓", "suryas": "✓"},
+        "JBS": {"crowns": "S", "turban pieces": "✓"},
+        "GG": {"crowns": "✓"},
+        "GN": {"crowns": "✓"}
       },
       "backdrop": "No. See above picture for preferred option"
     },
@@ -472,10 +849,10 @@
       "colors": ["orange", "blue", "multicolor"],
       "nightOutfits": ["G", "D", "H"],
       "jewelry": {
-        "RK":  { "crowns": "✓", "suryas": "✓" },
-        "JBS": { "crowns": "S", "turban pieces": "✓" },
-        "GG":  { "crowns": "✓" },
-        "GN":  { "crowns": "✓" }
+        "RK": {"crowns": "✓", "suryas": "✓"},
+        "JBS": {"crowns": "S", "turban pieces": "✓"},
+        "GG": {"crowns": "✓"},
+        "GN": {"crowns": "✓"}
       },
       "backdrop": "No. See above picture for preferred option."
     },
@@ -486,10 +863,10 @@
       "colors": ["orange", "blue"],
       "nightOutfits": ["D", "G", "R", "M", "P"],
       "jewelry": {
-        "RK":  { "crowns": "✓", "turban pieces": "✓", "suryas": "✓" },
-        "JBS": { "turban pieces": "✓" },
-        "GG":  { "crowns": "✓" },
-        "GN":  { "crowns": "✓" }
+        "RK": {"crowns": "✓", "turban pieces": "✓", "suryas": "✓"},
+        "JBS": {"turban pieces": "✓"},
+        "GG": {"crowns": "✓"},
+        "GN": {"crowns": "✓"}
       },
       "backdrop": "Yes"
     },
@@ -500,10 +877,10 @@
       "colors": ["red", "blue", "pink"],
       "nightOutfits": ["H", "P"],
       "jewelry": {
-        "RK":  { "crowns": "✓", "suryas": "✓" },
-        "JBS": { "crowns": "✓", "turban pieces": "✓" },
-        "GG":  { "crowns": "✓" },
-        "GN":  { "crowns": "✓" }
+        "RK": {"crowns": "✓", "suryas": "✓"},
+        "JBS": {"crowns": "✓", "turban pieces": "✓"},
+        "GG": {"crowns": "✓"},
+        "GN": {"crowns": "✓"}
       },
       "backdrop": "Yes"
     },
@@ -514,12 +891,26 @@
       "colors": ["pink", "blue"],
       "nightOutfits": ["C", "H"],
       "jewelry": {
-        "RK":  { "crowns": "✓", "turban pieces": "✓", "suryas": "✓" },
-        "JBS": { "crowns": "S", "turban pieces": "✓" },
-        "GG":  { "crowns": "✓" },
-        "GN":  { "crowns": "✓" }
+        "RK": {"crowns": "✓", "turban pieces": "✓", "suryas": "✓"},
+        "JBS": {"crowns": "S", "turban pieces": "✓"},
+        "GG": {"crowns": "✓"},
+        "GN": {"crowns": "✓"}
       },
       "backdrop": "No. See above picture for preferred option"
+    },
+    {
+      "id": 66,
+      "name": "Bridal Cream & Red",
+      "weather": "both",
+      "colors": ["cream", "red", "gold"],
+      "nightOutfits": ["D", "S"],
+      "jewelry": {
+        "RK": {"crowns": "Gold", "turban pieces": "Gold"},
+        "JBS": {"crowns": "Gold"},
+        "GG": {"crowns": "Gold"},
+        "GN": {"crowns": "Gold"}
+      },
+      "backdrop": "Yes"
     },
     {
       "id": 67,
@@ -528,12 +919,54 @@
       "colors": ["green", "red"],
       "nightOutfits": ["G", "O"],
       "jewelry": {
-        "RK":  { "crowns": "✓", "turban pieces": "✓", "suryas": "✓" },
-        "JBS": { "crowns": "S", "turban pieces": "✓" },
-        "GG":  { "crowns": "✓" },
-        "GN":  { "crowns": "✓" }
+        "RK": {"crowns": "✓", "turban pieces": "✓", "suryas": "✓"},
+        "JBS": {"crowns": "S", "turban pieces": "✓"},
+        "GG": {"crowns": "✓"},
+        "GN": {"crowns": "✓"}
       },
       "backdrop": "No"
+    },
+    {
+      "id": 68,
+      "name": "Saffron & Hot Pink",
+      "weather": "both",
+      "colors": ["saffron", "pink"],
+      "nightOutfits": ["G", "H"],
+      "jewelry": {
+        "RK": {"crowns": "✓", "turban pieces": "✓", "suryas": "✓"},
+        "JBS": {"crowns": "✓", "turban pieces": "✓"},
+        "GG": {"crowns": "✓"},
+        "GN": {"crowns": "✓"}
+      },
+      "backdrop": "Yes"
+    },
+    {
+      "id": 69,
+      "name": "Midnight Abhisara",
+      "weather": "cold",
+      "colors": ["white", "blue"],
+      "nightOutfits": ["B", "P"],
+      "jewelry": {
+        "RK": {"crowns": "✓", "turban pieces": "✓", "suryas": "✓"},
+        "JBS": {"crowns": "✓", "turban pieces": "✓"},
+        "GG": {"crowns": "✓"},
+        "GN": {"crowns": "✓"}
+      },
+      "backdrop": "Yes"
+    },
+    {
+      "id": 70,
+      "name": "Varsana Peacocks",
+      "weather": "both",
+      "colors": ["blue", "pink", "green"],
+      "nightOutfits": [],
+      "jewelry": {
+        "RK": {"crowns": "✓", "turban pieces": "✓", "suryas": "✓"},
+        "JBS": {"crowns": "S", "turban pieces": "✓"},
+        "GG": {"crowns": "✓", "turban pieces": "✓"},
+        "GN": {"crowns": "✓", "turban pieces": "✓"}
+      },
+      "backdrop": "No See above picture for preferred option"
     },
     {
       "id": 71,
@@ -542,12 +975,54 @@
       "colors": ["yellow", "red", "white"],
       "nightOutfits": ["I", "N", "R"],
       "jewelry": {
-        "RK":  { "turban pieces": "✓", "suryas": "✓" },
-        "JBS": { "crowns": "S", "turban pieces": "✓" },
-        "GG":  { "crowns": "✓" },
-        "GN":  { "crowns": "✓" }
+        "RK": {"turban pieces": "✓", "suryas": "✓"},
+        "JBS": {"crowns": "S", "turban pieces": "✓"},
+        "GG": {"crowns": "✓"},
+        "GN": {"crowns": "✓"}
       },
       "backdrop": "No. See above picture for preferred option"
+    },
+    {
+      "id": 72,
+      "name": "Balarama Purple & Cream",
+      "weather": "both",
+      "colors": ["purple", "cream", "blue"],
+      "nightOutfits": ["A", "K"],
+      "jewelry": {
+        "RK": {"crowns": "✓"},
+        "JBS": {"crowns": "S", "turban pieces": "✓"},
+        "GG": {"crowns": "✓"},
+        "GN": {"crowns": "✓"}
+      },
+      "backdrop": "Yes"
+    },
+    {
+      "id": 73,
+      "name": "Cintamani",
+      "weather": "both",
+      "colors": ["blue", "purple", "white"],
+      "nightOutfits": ["K"],
+      "jewelry": {
+        "RK": {"crowns": "✓", "turban pieces": "✓", "suryas": "✓"},
+        "JBS": {"crowns": "✓", "turban pieces": "✓"},
+        "GG": {"crowns": "✓"},
+        "GN": {"crowns": "✓"}
+      },
+      "backdrop": "Yes"
+    },
+    {
+      "id": 74,
+      "name": "Peacock on Green Velvet",
+      "weather": "cold",
+      "colors": ["green", "red", "gold"],
+      "nightOutfits": ["O", "R", "L"],
+      "jewelry": {
+        "RK": {"crowns": "✓", "turban pieces": "✓", "suryas": "✓"},
+        "JBS": {"crowns": "S", "turban pieces": "✓"},
+        "GG": {"crowns": "✓"},
+        "GN": {"crowns": "✓"}
+      },
+      "backdrop": "No See above picture for preferred option"
     },
     {
       "id": 75,
@@ -556,10 +1031,10 @@
       "colors": ["turquoise", "blue"],
       "nightOutfits": ["C", "P", "Q"],
       "jewelry": {
-        "RK":  { "crowns": "✓", "suryas": "✓" },
-        "JBS": { "crowns": "S", "turban pieces": "✓" },
-        "GG":  { "crowns": "✓" },
-        "GN":  { "crowns": "✓" }
+        "RK": {"crowns": "✓", "suryas": "✓"},
+        "JBS": {"crowns": "S", "turban pieces": "✓"},
+        "GG": {"crowns": "✓"},
+        "GN": {"crowns": "✓"}
       },
       "backdrop": "No. See above picture for preferred option"
     },
@@ -570,10 +1045,10 @@
       "colors": ["white"],
       "nightOutfits": ["B", "F"],
       "jewelry": {
-        "RK":  { "crowns": "✓", "turban pieces": "✓", "suryas": "✓" },
-        "JBS": { "crowns": "✓" },
-        "GG":  { "crowns": "✓" },
-        "GN":  { "crowns": "✓" }
+        "RK": {"crowns": "✓", "turban pieces": "✓", "suryas": "✓"},
+        "JBS": {"crowns": "✓"},
+        "GG": {"crowns": "✓"},
+        "GN": {"crowns": "✓"}
       },
       "backdrop": "Yes"
     },
@@ -584,10 +1059,10 @@
       "colors": ["black", "yellow"],
       "nightOutfits": ["N", "S"],
       "jewelry": {
-        "RK":  { "crowns": "Gold", "turban pieces": "Gold" },
-        "JBS": { "crowns": "Gold", "turban pieces": "Gold" },
-        "GG":  { "crowns": "Gold" },
-        "GN":  { "crowns": "Gold" }
+        "RK": {"crowns": "Gold", "turban pieces": "Gold"},
+        "JBS": {"crowns": "Gold", "turban pieces": "Gold"},
+        "GG": {"crowns": "Gold"},
+        "GN": {"crowns": "Gold"}
       },
       "backdrop": "Yes"
     },
@@ -598,10 +1073,10 @@
       "colors": ["purple", "pink", "silver"],
       "nightOutfits": ["H", "K"],
       "jewelry": {
-        "RK":  { "crowns": "✓", "turban pieces": "✓", "suryas": "✓" },
-        "JBS": { "crowns": "S", "turban pieces": "✓" },
-        "GG":  { "crowns": "✓" },
-        "GN":  { "crowns": "✓" }
+        "RK": {"crowns": "✓", "turban pieces": "✓", "suryas": "✓"},
+        "JBS": {"crowns": "S", "turban pieces": "✓"},
+        "GG": {"crowns": "✓"},
+        "GN": {"crowns": "✓"}
       },
       "backdrop": "No See above picture for preferred option."
     },
@@ -612,12 +1087,82 @@
       "colors": ["green", "yellow"],
       "nightOutfits": ["P", "N"],
       "jewelry": {
-        "RK":  { "crowns": "✓" },
-        "JBS": { "crowns": "S", "turban pieces": "✓" },
-        "GG":  { "crowns": "✓" },
-        "GN":  { "crowns": "✓" }
+        "RK": {"crowns": "✓"},
+        "JBS": {"crowns": "S", "turban pieces": "✓"},
+        "GG": {"crowns": "✓"},
+        "GN": {"crowns": "✓"}
       },
       "backdrop": "Yes"
+    },
+    {
+      "id": 80,
+      "name": "Multicolour Peacock",
+      "weather": "both",
+      "colors": ["yellow", "red", "blue"],
+      "nightOutfits": ["R", "P", "J"],
+      "jewelry": {
+        "RK": {"crowns": "✓", "turban pieces": "✓"},
+        "JBS": {"crowns": "S", "turban pieces": "✓"},
+        "GG": {"crowns": "✓"},
+        "GN": {"crowns": "✓"}
+      },
+      "backdrop": "Yes"
+    },
+    {
+      "id": 81,
+      "name": "Pastel Rainbow",
+      "weather": "hot",
+      "colors": ["pastel", "pink", "yellow"],
+      "nightOutfits": ["F", "J", "D"],
+      "jewelry": {
+        "RK": {"turban pieces": "✓", "suryas": "✓"},
+        "JBS": {"crowns": "S", "turban pieces": "✓"},
+        "GG": {"crowns": "✓"},
+        "GN": {"crowns": "✓"}
+      },
+      "backdrop": "No See above picture for preferred option"
+    },
+    {
+      "id": 82,
+      "name": "Lemon & Red with lilies",
+      "weather": "cold",
+      "colors": ["yellow", "red"],
+      "nightOutfits": ["D", "N", "O"],
+      "jewelry": {
+        "RK": {"crowns": "✓"},
+        "JBS": {"crowns": "✓", "turban pieces": "✓"},
+        "GG": {"crowns": "✓"},
+        "GN": {"crowns": "✓"}
+      },
+      "backdrop": "Yes"
+    },
+    {
+      "id": 83,
+      "name": "Majestic Purple & Turquoise",
+      "weather": "cold",
+      "colors": ["purple", "turquoise"],
+      "nightOutfits": ["A", "P", "Q", "K"],
+      "jewelry": {
+        "RK": {"crowns": "✓", "turban pieces": "✓", "suryas": "✓"},
+        "JBS": {"crowns": "✓", "turban pieces": "✓"},
+        "GG": {"crowns": "✓"},
+        "GN": {"crowns": "✓"}
+      },
+      "backdrop": "Yes"
+    },
+    {
+      "id": 84,
+      "name": "Diamante Peacocks",
+      "weather": "both",
+      "colors": ["silver", "blue", "green"],
+      "nightOutfits": ["O"],
+      "jewelry": {
+        "RK": {"crowns": "✓"},
+        "JBS": {"crowns": "S", "turban pieces": "✓"},
+        "GG": {"crowns": "✓"},
+        "GN": {"crowns": "✓"}
+      },
+      "backdrop": "No See above picture for preferred option London Backdrop"
     }
   ]
 }
