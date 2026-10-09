@@ -227,6 +227,146 @@
         "GN":  { "crowns": "✓" }
       },
       "backdrop": "Yes"
+    },
+    {
+      "id": 31,
+      "name": "Hare Krsna Maha Mantra",
+      "weather": "both",
+      "colors": ["blue", "yellow", "white"],
+      "nightOutfits": ["C", "N", "J", "A", "H"],
+      "jewelry": {
+        "RK":  { "crowns": "✓", "turban pieces": "✓", "suryas": "✓" },
+        "JBS": { "crowns": "S", "turban pieces": "✓" },
+        "GG":  { "crowns": "✓" },
+        "GN":  { "crowns": "✓" }
+      },
+      "backdrop": "Yes"
+    },
+    {
+      "id": 32,
+      "name": "Bows & Mirrors",
+      "weather": "both",
+      "colors": ["yellow", "purple"],
+      "nightOutfits": ["K", "N", "A", "B"],
+      "jewelry": {
+        "RK":  { "crowns": "✓", "turban pieces": "✓", "suryas": "✓" },
+        "JBS": { "crowns": "✓", "turban pieces": "✓" },
+        "GG":  { "crowns": "✓", "suryas": "✓" },
+        "GN":  { "crowns": "✓", "suryas": "✓" }
+      },
+      "backdrop": "Yes"
+    },
+    {
+      "id": 33,
+      "name": "Turquoise with Golden Fish",
+      "weather": "hot",
+      "colors": ["turquoise", "gold"],
+      "nightOutfits": ["P", "H", "B", "M"],
+      "jewelry": {
+        "RK":  { "crowns": "✓" },
+        "JBS": { "crowns": "✓" },
+        "GG":  { "crowns": "✓" },
+        "GN":  { "crowns": "✓" }
+      },
+      "backdrop": "Yes"
+    },
+    {
+      "id": 34,
+      "name": "Champa Flowers",
+      "weather": "hot",
+      "colors": ["green", "pink", "yellow"],
+      "nightOutfits": ["I", "M", "J"],
+      "jewelry": {
+        "RK":  { "crowns": "✓", "suryas": "✓" },
+        "JBS": { "crowns": "✓" },
+        "GG":  { "crowns": "✓" },
+        "GN":  { "crowns": "✓" }
+      },
+      "backdrop": "Yes"
+    },
+    {
+      "id": 35,
+      "name": "Hot Pink & Cream with Roses",
+      "weather": "both",
+      "colors": ["pink", "cream"],
+      "nightOutfits": ["D", "M", "R", "I"],
+      "jewelry": {
+        "RK":  { "crowns": "✓", "turban pieces": "✓", "suryas": "✓" },
+        "JBS": { "crowns": "✓", "turban pieces": "✓", "suryas": "✓" },
+        "GG":  { "crowns": "✓" },
+        "GN":  { "crowns": "✓" }
+      },
+      "backdrop": "Yes"
+    },
+    {
+      "id": 39,
+      "name": "Lime & Lemon Yellow",
+      "weather": "both",
+      "colors": ["yellow", "lime", "green"],
+      "nightOutfits": ["I", "J"],
+      "jewelry": {
+        "RK":  { "crowns": "Silver", "turban pieces": "✓" },
+        "JBS": { "crowns": "✓", "turban pieces": "✓" },
+        "GG":  { "crowns": "✓" },
+        "GN":  { "crowns": "✓" }
+      },
+      "backdrop": "Yes"
+    },
+    {
+      "id": 42,
+      "name": "Janmastami Purple Multi",
+      "weather": "hot",
+      "colors": ["purple", "orange", "multicolor"],
+      "nightOutfits": ["A", "G", "K", "S"],
+      "jewelry": {
+        "RK":  { "crowns": "✓", "turban pieces": "✓" },
+        "JBS": { "crowns": "S", "turban pieces": "✓" },
+        "GG":  { "crowns": "✓" },
+        "GN":  { "crowns": "✓" }
+      },
+      "backdrop": "Yes"
+    },
+    {
+      "id": 43,
+      "name": "Lily of the Valley",
+      "weather": "both",
+      "colors": ["green", "pink"],
+      "nightOutfits": ["L", "M"],
+      "jewelry": {
+        "RK":  { "crowns": "✓", "turban pieces": "✓", "suryas": "✓" },
+        "JBS": { "crowns": "✓" },
+        "GG":  { "crowns": "✓" },
+        "GN":  { "crowns": "✓" }
+      },
+      "backdrop": "Yes"
+    },
+    {
+      "id": 46,
+      "name": "Vilasini's Rose Garden",
+      "weather": "both",
+      "colors": ["pink", "silver"],
+      "nightOutfits": ["F", "H", "L"],
+      "jewelry": {
+        "RK":  { "crowns": "✓" },
+        "JBS": { "crowns": "✓" },
+        "GG":  { "crowns": "✓" },
+        "GN":  { "crowns": "✓" }
+      },
+      "backdrop": "Yes"
+    },
+    {
+      "id": 50,
+      "name": "Balaram 2018",
+      "weather": "both",
+      "colors": ["pink", "gold", "green"],
+      "nightOutfits": ["H"],
+      "jewelry": {
+        "RK":  { "crowns": "✓", "turban pieces": "✓" },
+        "JBS": { "crowns": "S" },
+        "GG":  { "crowns": "✓" },
+        "GN":  { "crowns": "✓" }
+      },
+      "backdrop": "No. See above picture for preferred option."
     }
   ]
 }
