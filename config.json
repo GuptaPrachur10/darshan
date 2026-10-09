@@ -367,6 +367,145 @@
         "GN":  { "crowns": "✓" }
       },
       "backdrop": "No. See above picture for preferred option."
+    },
+    {
+      "id": 51,
+      "name": "Bellflowers",
+      "weather": "both",
+      "colors": ["blue", "gold"],
+      "nightOutfits": ["E", "K", "P"],
+      "jewelry": {
+        "RK":  { "crowns": "Gold", "turban pieces": "Gold" },
+        "JBS": { "crowns": "Gold", "turban pieces": "Gold" },
+        "GG":  { "crowns": "Gold" },
+        "GN":  { "crowns": "Gold" }
+      },
+      "backdrop": "Yes"
+    },
+    {
+      "id": 52,
+      "name": "Autumn Berries",
+      "weather": "hot",
+      "colors": ["purple", "orange", "gold"],
+      "nightOutfits": ["G", "R", "S"],
+      "jewelry": {
+        "RK":  { "crowns": "✓" },
+        "JBS": { "crowns": "✓" },
+        "GG":  { "crowns": "✓" }
+      },
+      "backdrop": "Yes"
+    },
+    {
+      "id": 53,
+      "name": "Doves (Ekadasi)",
+      "weather": "both",
+      "colors": ["red", "white"],
+      "nightOutfits": ["B"],
+      "jewelry": {
+        "RK":  { "crowns": "✓", "turban pieces": "✓", "suryas": "✓" },
+        "JBS": { "crowns": "S", "turban pieces": "✓" },
+        "GG":  { "crowns": "✓" },
+        "GN":  { "crowns": "✓" }
+      },
+      "backdrop": "Yes"
+    },
+    {
+      "id": 54,
+      "name": "Pink & Orange (Ekadasi)",
+      "weather": "both",
+      "colors": ["pink", "orange"],
+      "nightOutfits": ["F", "B"],
+      "jewelry": {
+        "RK":  { "crowns": "✓", "turban pieces": "✓", "suryas": "✓" },
+        "JBS": { "crowns": "S", "turban pieces": "✓" },
+        "GG":  { "crowns": "✓" },
+        "GN":  { "crowns": "✓" }
+      },
+      "backdrop": "No. See above picture for preferred option."
+    },
+    {
+      "id": 56,
+      "name": "Blue Lotus",
+      "weather": "both",
+      "colors": ["blue"],
+      "nightOutfits": ["P"],
+      "jewelry": {
+        "RK":  { "crowns": "✓" },
+        "JBS": { "crowns": "S", "turban pieces": "✓" },
+        "GG":  { "crowns": "✓" },
+        "GN":  { "crowns": "✓" }
+      },
+      "backdrop": "Yes"
+    },
+    {
+      "id": 57,
+      "name": "Apple Green & Pearls",
+      "weather": "both",
+      "colors": ["green", "white"],
+      "nightOutfits": ["L", "N"],
+      "jewelry": {
+        "RK":  { "crowns": "✓", "turban pieces": "✓" },
+        "JBS": { "crowns": "✓", "turban pieces": "✓" },
+        "GG":  { "crowns": "✓" },
+        "GN":  { "crowns": "✓" }
+      },
+      "backdrop": "Yes"
+    },
+    {
+      "id": 61,
+      "name": "Lace & Vines",
+      "weather": "hot",
+      "colors": ["pink", "purple", "green"],
+      "nightOutfits": ["K", "M", "A"],
+      "jewelry": {
+        "RK":  { "crowns": "✓", "turban pieces": "✓", "suryas": "✓" },
+        "JBS": { "crowns": "S", "turban pieces": "✓" },
+        "GG":  { "crowns": "✓" },
+        "GN":  { "crowns": "✓" }
+      },
+      "backdrop": "No. See above picture for preferred option"
+    },
+    {
+      "id": 62,
+      "name": "Radha Krsna Bhavan",
+      "weather": "hot",
+      "colors": ["orange", "blue", "multicolor"],
+      "nightOutfits": ["G", "D", "H"],
+      "jewelry": {
+        "RK":  { "crowns": "✓", "suryas": "✓" },
+        "JBS": { "crowns": "S", "turban pieces": "✓" },
+        "GG":  { "crowns": "✓" },
+        "GN":  { "crowns": "✓" }
+      },
+      "backdrop": "No. See above picture for preferred option."
+    },
+    {
+      "id": 63,
+      "name": "Fleur de Lys",
+      "weather": "both",
+      "colors": ["orange", "blue"],
+      "nightOutfits": ["D", "G", "R", "M", "P"],
+      "jewelry": {
+        "RK":  { "crowns": "✓", "turban pieces": "✓", "suryas": "✓" },
+        "JBS": { "turban pieces": "✓" },
+        "GG":  { "crowns": "✓" },
+        "GN":  { "crowns": "✓" }
+      },
+      "backdrop": "Yes"
+    },
+    {
+      "id": 64,
+      "name": "Humming Birds",
+      "weather": "hot",
+      "colors": ["red", "blue", "pink"],
+      "nightOutfits": ["H", "P"],
+      "jewelry": {
+        "RK":  { "crowns": "✓", "suryas": "✓" },
+        "JBS": { "crowns": "✓", "turban pieces": "✓" },
+        "GG":  { "crowns": "✓" },
+        "GN":  { "crowns": "✓" }
+      },
+      "backdrop": "Yes"
     }
   ]
 }
