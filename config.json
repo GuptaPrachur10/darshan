@@ -506,6 +506,118 @@
         "GN":  { "crowns": "✓" }
       },
       "backdrop": "Yes"
+    },
+    {
+      "id": 65,
+      "name": "Govardhan",
+      "weather": "hot",
+      "colors": ["pink", "blue"],
+      "nightOutfits": ["C", "H"],
+      "jewelry": {
+        "RK":  { "crowns": "✓", "turban pieces": "✓", "suryas": "✓" },
+        "JBS": { "crowns": "S", "turban pieces": "✓" },
+        "GG":  { "crowns": "✓" },
+        "GN":  { "crowns": "✓" }
+      },
+      "backdrop": "No. See above picture for preferred option"
+    },
+    {
+      "id": 67,
+      "name": "Green & Red with checks",
+      "weather": "hot",
+      "colors": ["green", "red"],
+      "nightOutfits": ["G", "O"],
+      "jewelry": {
+        "RK":  { "crowns": "✓", "turban pieces": "✓", "suryas": "✓" },
+        "JBS": { "crowns": "S", "turban pieces": "✓" },
+        "GG":  { "crowns": "✓" },
+        "GN":  { "crowns": "✓" }
+      },
+      "backdrop": "No"
+    },
+    {
+      "id": 71,
+      "name": "Ratha Yatra",
+      "weather": "hot",
+      "colors": ["yellow", "red", "white"],
+      "nightOutfits": ["I", "N", "R"],
+      "jewelry": {
+        "RK":  { "turban pieces": "✓", "suryas": "✓" },
+        "JBS": { "crowns": "S", "turban pieces": "✓" },
+        "GG":  { "crowns": "✓" },
+        "GN":  { "crowns": "✓" }
+      },
+      "backdrop": "No. See above picture for preferred option"
+    },
+    {
+      "id": 75,
+      "name": "Yamunotri",
+      "weather": "hot",
+      "colors": ["turquoise", "blue"],
+      "nightOutfits": ["C", "P", "Q"],
+      "jewelry": {
+        "RK":  { "crowns": "✓", "suryas": "✓" },
+        "JBS": { "crowns": "S", "turban pieces": "✓" },
+        "GG":  { "crowns": "✓" },
+        "GN":  { "crowns": "✓" }
+      },
+      "backdrop": "No. See above picture for preferred option"
+    },
+    {
+      "id": 76,
+      "name": "Saradiya rasa",
+      "weather": "both",
+      "colors": ["white"],
+      "nightOutfits": ["B", "F"],
+      "jewelry": {
+        "RK":  { "crowns": "✓", "turban pieces": "✓", "suryas": "✓" },
+        "JBS": { "crowns": "✓" },
+        "GG":  { "crowns": "✓" },
+        "GN":  { "crowns": "✓" }
+      },
+      "backdrop": "Yes"
+    },
+    {
+      "id": 77,
+      "name": "Black & Yellow Plaid",
+      "weather": "both",
+      "colors": ["black", "yellow"],
+      "nightOutfits": ["N", "S"],
+      "jewelry": {
+        "RK":  { "crowns": "Gold", "turban pieces": "Gold" },
+        "JBS": { "crowns": "Gold", "turban pieces": "Gold" },
+        "GG":  { "crowns": "Gold" },
+        "GN":  { "crowns": "Gold" }
+      },
+      "backdrop": "Yes"
+    },
+    {
+      "id": 78,
+      "name": "Lilac & Pink Silver",
+      "weather": "hot",
+      "colors": ["purple", "pink", "silver"],
+      "nightOutfits": ["H", "K"],
+      "jewelry": {
+        "RK":  { "crowns": "✓", "turban pieces": "✓", "suryas": "✓" },
+        "JBS": { "crowns": "S", "turban pieces": "✓" },
+        "GG":  { "crowns": "✓" },
+        "GN":  { "crowns": "✓" }
+      },
+      "backdrop": "No See above picture for preferred option."
+    },
+    {
+      "id": 79,
+      "name": "Pastel Mint Lotus petals",
+      "weather": "hot",
+      "colors": ["green", "yellow"],
+      "nightOutfits": ["P", "N"],
+      "jewelry": {
+        "RK":  { "crowns": "✓" },
+        "JBS": { "crowns": "S", "turban pieces": "✓" },
+        "GG":  { "crowns": "✓" },
+        "GN":  { "crowns": "✓" }
+      },
+      "backdrop": "Yes"
     }
   ]
 }
