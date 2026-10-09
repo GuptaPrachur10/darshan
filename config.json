@@ -17,6 +17,216 @@
         "GN":  { "crowns": "✓" }
       },
       "backdrop": "See picture above for preferred option"
+    },
+    {
+      "id": 3,
+      "name": "Janmastami 2007",
+      "weather": "both",
+      "colors": ["blue", "pink", "silver"],
+      "nightOutfits": ["C", "H", "P"],
+      "jewelry": {
+        "RK":  { "crowns": "✓", "suryas": "✓" },
+        "JBS": { "crowns": "✓" },
+        "GG":  { "crowns": "✓" },
+        "GN":  { "crowns": "✓" }
+      },
+      "backdrop": "Yes"
+    },
+    {
+      "id": 4,
+      "name": "Autumn Forest",
+      "weather": "hot",
+      "colors": ["orange", "green"],
+      "nightOutfits": ["J", "M", "N"],
+      "jewelry": {
+        "RK":  { "crowns": "✓", "turban pieces": "✓", "suryas": "✓" },
+        "JBS": { "crowns": "✓", "turban pieces": "✓" },
+        "GG":  { "crowns": "✓" },
+        "GN":  { "crowns": "✓" }
+      },
+      "backdrop": "Yes"
+    },
+    {
+      "id": 6,
+      "name": "Conch Orissa Style",
+      "weather": "hot",
+      "colors": ["pink", "purple"],
+      "nightOutfits": ["H", "F", "K", "A", "G"],
+      "jewelry": {
+        "RK":  { "crowns": "Gold", "turban pieces": "Gold", "suryas": "Gold" },
+        "JBS": { "crowns": "Gold", "turban pieces": "✓" },
+        "GG":  { "crowns": "Gold", "turban pieces": "Gold" },
+        "GN":  { "crowns": "Gold", "turban pieces": "Gold" }
+      },
+      "backdrop": "Yes"
+    },
+    {
+      "id": 7,
+      "name": "ISKCON 50",
+      "weather": "both",
+      "colors": ["gold"],
+      "nightOutfits": ["R", "S"],
+      "jewelry": {
+        "RK":  { "crowns": "✓", "turban pieces": "✓", "suryas": "✓" },
+        "JBS": { "crowns": "S", "turban pieces": "✓" },
+        "GG":  { "crowns": "✓" },
+        "GN":  { "crowns": "✓" }
+      },
+      "backdrop": "No. See above picture for preferred option. (Note: Any backdrop colour would work, provided the garlands match with the backdrop)"
+    },
+    {
+      "id": 8,
+      "name": "Udilo Aruna",
+      "weather": "both",
+      "colors": ["orange"],
+      "nightOutfits": ["D", "J", "G", "S"],
+      "jewelry": {
+        "RK":  { "crowns": "✓", "turban pieces": "✓", "suryas": "✓" },
+        "JBS": { "crowns": "S", "turban pieces": "✓" },
+        "GG":  { "crowns": "✓" },
+        "GN":  { "crowns": "✓" }
+      },
+      "backdrop": "Yes"
+    },
+    {
+      "id": 10,
+      "name": "Peacock Jal",
+      "weather": "hot",
+      "colors": ["blue", "purple", "green"],
+      "nightOutfits": ["A", "E", "K", "Q"],
+      "jewelry": {
+        "RK":  { "crowns": "✓" },
+        "JBS": { "crowns": "S", "turban pieces": "✓" },
+        "GG":  { "crowns": "✓" },
+        "GN":  { "crowns": "✓" }
+      },
+      "backdrop": "Yes"
+    },
+    {
+      "id": 11,
+      "name": "Patram Puspam phalam toyam",
+      "weather": "both",
+      "colors": ["white", "silver", "multicolor"],
+      "nightOutfits": ["B", "J", "N", "L"],
+      "jewelry": {
+        "RK":  { "crowns": "✓", "turban pieces": "✓", "suryas": "✓" },
+        "JBS": { "crowns": "✓", "turban pieces": "✓" },
+        "GG":  { "crowns": "✓" },
+        "GN":  { "crowns": "✓" }
+      },
+      "backdrop": "Yes"
+    },
+    {
+      "id": 12,
+      "name": "Purple Rainbow",
+      "weather": "hot",
+      "colors": ["purple", "blue"],
+      "nightOutfits": ["K", "Q", "A", "P"],
+      "jewelry": {
+        "RK":  { "crowns": "✓" },
+        "JBS": { "crowns": "✓" },
+        "GG":  { "crowns": "✓" },
+        "GN":  { "crowns": "✓" }
+      },
+      "backdrop": "Yes"
+    },
+    {
+      "id": 15,
+      "name": "Maroon & Gold with Jari",
+      "weather": "both",
+      "colors": ["maroon", "gold"],
+      "nightOutfits": ["D", "O", "R", "S"],
+      "jewelry": {
+        "RK":  { "crowns": "✓" },
+        "JBS": { "crowns": "S" },
+        "GG":  { "crowns": "✓" },
+        "GN":  { "crowns": "✓" }
+      },
+      "backdrop": "Yes"
+    },
+    {
+      "id": 19,
+      "name": "Syama Tulasi",
+      "weather": "hot",
+      "colors": ["green", "pink", "purple"],
+      "nightOutfits": ["F", "L", "M", "J"],
+      "jewelry": {
+        "RK":  { "crowns": "✓", "turban pieces": "✓", "suryas": "✓" },
+        "JBS": { "crowns": "S", "turban pieces": "✓" },
+        "GG":  { "crowns": "✓" },
+        "GN":  { "crowns": "✓" }
+      },
+      "backdrop": "Yes"
+    },
+    {
+      "id": 20,
+      "name": "Paisley on Hot Pink",
+      "weather": "hot",
+      "colors": ["pink", "blue"],
+      "nightOutfits": ["E", "P", "R"],
+      "jewelry": {
+        "RK":  { "crowns": "✓" },
+        "JBS": { "crowns": "✓" },
+        "GG":  { "crowns": "✓" },
+        "GN":  { "crowns": "✓" }
+      },
+      "backdrop": "Yes"
+    },
+    {
+      "id": 21,
+      "name": "Puspavana",
+      "weather": "hot",
+      "colors": ["green", "gold", "multicolor"],
+      "nightOutfits": ["A", "D", "K", "M", "I", "S"],
+      "jewelry": {
+        "RK":  { "crowns": "✓", "turban pieces": "✓" },
+        "JBS": { "crowns": "S", "turban pieces": "✓" },
+        "GG":  { "crowns": "✓" },
+        "GN":  { "crowns": "✓" }
+      },
+      "backdrop": "No. See above picture for preferred option"
+    },
+    {
+      "id": 23,
+      "name": "Venu gita",
+      "weather": "cold",
+      "colors": ["cream", "black", "multicolor"],
+      "nightOutfits": ["J", "L", "O"],
+      "jewelry": {
+        "RK":  { "crowns": "✓", "turban pieces": "✓" },
+        "JBS": { "crowns": "S", "turban pieces": "✓" },
+        "GG":  { "crowns": "✓" },
+        "GN":  { "crowns": "✓" }
+      },
+      "backdrop": "Yes"
+    },
+    {
+      "id": 25,
+      "name": "Summer Blooms",
+      "weather": "hot",
+      "colors": ["blue", "yellow"],
+      "nightOutfits": ["P", "N", "J"],
+      "jewelry": {
+        "RK":  { "crowns": "✓", "turban pieces": "✓", "suryas": "✓" },
+        "JBS": { "crowns": "S", "turban pieces": "✓" },
+        "GG":  { "crowns": "✓" },
+        "GN":  { "crowns": "✓" }
+      },
+      "backdrop": "Yes"
+    },
+    {
+      "id": 27,
+      "name": "Copper Multi",
+      "weather": "both",
+      "colors": ["copper", "multicolor"],
+      "nightOutfits": ["C", "D", "H", "P", "S"],
+      "jewelry": {
+        "RK":  { "crowns": "✓" },
+        "JBS": { "crowns": "S", "turban pieces": "✓" },
+        "GG":  { "crowns": "✓" },
+        "GN":  { "crowns": "✓" }
+      },
+      "backdrop": "Yes"
     }
   ]
 }
