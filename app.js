@@ -26,7 +26,7 @@ const WEATHER = {
 const state = {
   config: null,
   settings: null,
-  filters: { q: '', weather: '', color: '' },
+  filters: { q: '', color: '' },
   photoCache: new Map(), // "<parentId>/<name>" -> photos[] | null (folder missing)
   galleryToken: 0,
   view: '',
@@ -192,8 +192,6 @@ function renderHome() {
     <section class="controls panel">
       <input id="search" type="search" placeholder="Search by number or name"
              value="${esc(f.q)}" autocomplete="off">
-      ${chipGroup('Weather', 'weather', [
-        { value: 'hot', label: 'Hot' }, { value: 'cold', label: 'Cold' }])}
       ${chipGroup('Color', 'color', allColors().map((c) => ({ value: c, label: colorName(c) })))}
     </section>
     <p id="count" class="count"></p>
@@ -217,7 +215,6 @@ function matches(d) {
   const f = state.filters;
   const q = f.q.trim().toLowerCase();
   if (q && !String(d.id).startsWith(q) && !String(d.name || '').toLowerCase().includes(q)) return false;
-  if (f.weather && d.weather !== f.weather && d.weather !== 'both') return false;
   if (f.color && !(d.colors || []).some((c) => String(c).toLowerCase() === f.color)) return false;
   return true;
 }
@@ -227,7 +224,6 @@ function updateList() {
   document.getElementById('count').textContent =
     `${shown.length} of ${state.config.dresses.length} dresses`;
   document.getElementById('list').innerHTML = shown.map((d) => {
-    const w = weatherInfo(d.weather);
     const meta = [
       colorList(d.colors),
       d.nightOutfits?.length ? `Night: ${d.nightOutfits.join(' ')}` : '',
@@ -239,7 +235,6 @@ function updateList() {
           <span class="row-name">${esc(d.name)}</span>
           ${meta ? `<span class="row-meta">${esc(meta)}</span>` : ''}
         </span>
-        <span class="badge weather-${esc(d.weather)}">${esc(w.short)}</span>
       </a></li>`;
   }).join('') || '<li class="status">No dresses match these filters.</li>';
 }
