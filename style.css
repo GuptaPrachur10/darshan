@@ -226,18 +226,6 @@ main { max-width: 860px; margin: 0 auto; }
 .row-name { font-size: 17px; font-weight: 800; color: var(--ink); }
 .row-meta { color: var(--muted); font-size: 14px; font-weight: 600; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 
-.badge {
-  flex: none;
-  padding: 4px 12px;
-  border-radius: 999px;
-  font-size: 13px;
-  font-weight: 800;
-  border: 1px solid transparent;
-}
-.weather-hot { color: var(--warm); background: var(--warm-soft); border-color: #eccfaa; }
-.weather-cold { color: var(--blue); background: var(--blue-soft); border-color: #bfd6ea; }
-.weather-both { color: var(--green); background: var(--leaf-soft); border-color: #bfdcc3; }
-
 /* ---------- dress card ---------- */
 
 .crumbs { display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px; font-weight: 800; }
