@@ -26,7 +26,7 @@ const WEATHER = {
 const state = {
   config: null,
   settings: null,
-  filters: { q: '', color: '' },
+  filters: { q: '', weather: '', color: '' },
   photoCache: new Map(), // "<parentId>/<name>" -> photos[] | null (folder missing)
   galleryToken: 0,
   view: '',
@@ -192,6 +192,8 @@ function renderHome() {
     <section class="controls panel">
       <input id="search" type="search" placeholder="Search by number or name"
              value="${esc(f.q)}" autocomplete="off">
+      ${chipGroup('Weather', 'weather', [
+        { value: 'hot', label: 'Hot' }, { value: 'cold', label: 'Cold' }])}
       ${chipGroup('Color', 'color', allColors().map((c) => ({ value: c, label: colorName(c) })))}
     </section>
     <p id="count" class="count"></p>
@@ -215,6 +217,8 @@ function matches(d) {
   const f = state.filters;
   const q = f.q.trim().toLowerCase();
   if (q && !String(d.id).startsWith(q) && !String(d.name || '').toLowerCase().includes(q)) return false;
+  // "both" dresses suit either season, so they show under Hot and under Cold.
+  if (f.weather && d.weather !== f.weather && d.weather !== 'both') return false;
   if (f.color && !(d.colors || []).some((c) => String(c).toLowerCase() === f.color)) return false;
   return true;
 }
