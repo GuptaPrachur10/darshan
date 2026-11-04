@@ -21,11 +21,11 @@ then the update.
 |---|---|
 | `No.` | Dress number: link and photo folder |
 | `Name` | Title. Words in brackets, e.g. `(EKADASI)`, also become a **Tag** filter |
-| `Jewellery` | Jewellery colours, comma-separated. Shown prominently; **filter** |
+| `Jewellery` | Jewellery colours, comma-separated. Shown prominently; **filter**. A note in brackets, e.g. `Gold (see garland colour)`, is shown on the dress page; the filter just uses `Gold` |
 | `RK`, `JB`, `S`, `GN/GG` | Crowns / turban pieces / suryas table, using codes `C`, `T`, `S`, optionally after `Gold` or `Silver` (e.g. `Gold C, T`) |
 | `Backdrop` | Text, or a dress number (e.g. `69`) meaning "same backdrop as dress 69" |
 | `Night Outfits` | Letters, comma-separated; each links to its night outfit page |
-| `Weather Suitability` | `Hot`, `Cold`, or `Hot, Cold` for both; **filter** |
+| `Weather Suitability` | `Hot`, `Cold` or `Both` (also understands e.g. `Hot Weather`, `Hot & Cold`, `Summer`, `Winter`). The filter always offers Hot / Cold / Both; Hot also finds Both |
 | `Location` | `Pujari` or `TCR` (office at Tottenham Court Road); **filter**. TCR dresses are dimmed in the list, explained by a legend |
 | `Repair Requirements`, `First Offered`, `Designed By` | Kept in the sheet only; not shown |
 
