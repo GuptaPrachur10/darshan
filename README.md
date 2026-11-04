@@ -26,7 +26,7 @@ then the update.
 | `Backdrop` | Text, or a dress number (e.g. `69`) meaning "same backdrop as dress 69" |
 | `Night Outfits` | Letters, comma-separated; each links to its night outfit page |
 | `Weather Suitability` | `Hot`, `Cold`, or `Hot, Cold` for both; **filter** |
-| `Location` | `Pujari` or `TCR` (Tottenham Court Road); **filter**. TCR dresses are dimmed in the list |
+| `Location` | `Pujari` or `TCR` (office at Tottenham Court Road); **filter**. TCR dresses are dimmed in the list, explained by a legend |
 | `Repair Requirements`, `First Offered`, `Designed By` | Kept in the sheet only; not shown |
 
 **Sheet check:** open `…/#/check` on the site after editing. It lists skipped
