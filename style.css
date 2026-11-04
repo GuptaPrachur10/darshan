@@ -462,17 +462,6 @@ a.pill:hover { border-color: var(--green); }
 /* Dresses away from the temple (e.g. at TCR) are dimmed in the list. */
 .row.faded { opacity: 0.55; filter: grayscale(0.8); }
 .row.faded:hover { opacity: 0.85; }
-.loc-badge {
-  flex: none;
-  padding: 3px 10px;
-  border: 1px solid var(--line);
-  border-radius: 999px;
-  background: #f3f5f3;
-  color: var(--muted);
-  font-size: 12px;
-  font-weight: 800;
-  letter-spacing: 0.5px;
-}
 
 .sticker-away { --tone: var(--muted); --tone-bg: #f1f2f1; }
 
@@ -546,3 +535,27 @@ a.pill:hover { border-color: var(--green); }
 .check-count.has { background: var(--warm-soft); color: var(--warm); }
 .check-hint { margin: 0 0 6px; color: var(--muted); font-size: 14px; }
 .ok { margin: 0; color: var(--green); font-weight: 700; }
+
+/* Legends: what dimmed rows and short codes (RK, JB, ...) mean. */
+.legend {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px 16px;
+  margin: -10px 0 14px 4px;
+  color: var(--muted);
+  font-size: 13px;
+  font-weight: 700;
+}
+.legend b { color: var(--green-dark); margin-right: 4px; }
+.legend-swatch {
+  width: 22px;
+  height: 14px;
+  border: 1px solid var(--line);
+  border-radius: 4px;
+  background: #fff;
+  opacity: 0.55;
+  filter: grayscale(0.8);
+}
+.deity-legend { margin: -12px 0 22px 2px; }
+.jewelry tbody th abbr { text-decoration: none; cursor: help; }
