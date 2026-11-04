@@ -548,14 +548,28 @@ a.pill:hover { border-color: var(--green); }
   font-weight: 700;
 }
 .legend b { color: var(--green-dark); margin-right: 4px; }
-.legend-swatch {
-  width: 22px;
-  height: 14px;
-  border: 1px solid var(--line);
-  border-radius: 4px;
-  background: #fff;
-  opacity: 0.55;
-  filter: grayscale(0.8);
+
+/* Key for short codes, at the very bottom of a dress page. */
+.page-legend {
+  margin-top: 20px;
+  padding: 14px 20px;
+  border: 1px dashed var(--line);
+  border-radius: var(--radius);
+  background: rgba(255, 255, 255, 0.7);
+  color: var(--muted);
+  font-size: 14px;
 }
-.deity-legend { margin: -12px 0 22px 2px; }
+.page-legend h2 {
+  margin: 0 0 8px;
+  color: var(--green-dark);
+  font-size: 13px;
+  font-weight: 800;
+  letter-spacing: 0.6px;
+  text-transform: uppercase;
+}
+.page-legend dl { display: grid; gap: 4px; margin: 0; }
+.page-legend dl div { display: flex; gap: 10px; }
+.page-legend dt { min-width: 52px; color: var(--ink); font-weight: 800; }
+.page-legend dd { margin: 0; font-weight: 600; }
 .jewelry tbody th abbr { text-decoration: none; cursor: help; }
+.jewel-note { color: var(--muted); font-size: 13px; font-weight: 700; }
