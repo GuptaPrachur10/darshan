@@ -1,32 +1,79 @@
 'use strict';
 
 /*
- * Dress Catalog: a static, single-page app.
+ * Darshan Catalog: a static, single-page app.
  *
- * Text comes from config.json (in the repo). Photos come from Google Drive,
- * fetched only when a dress (or night outfit) is opened:
- *   settings.dressesFolderId/<dress id>/*.jpg
+ * All dress information comes from a Google Sheet published as CSV
+ * (settings.sheetCsvUrl). Whatever columns the sheet has are shown on the dress
+ * page; only the columns listed under "sheet vocabulary" get special treatment.
+ * The last good copy of the sheet is kept in the browser, so return visits show
+ * the list instantly and the sheet is refreshed in the background.
+ *
+ * Photos come from Google Drive, fetched only when a dress (or night outfit) is opened:
+ *   settings.dressesFolderId/<dress number>/*.jpg
  *   settings.nightOutfitsFolderId/<letter>/*.jpg
  *
  * Pages (hash routes, so GitHub Pages needs no server config):
- *   #/            text-only list with search + filters
+ *   #/            list with search + filters
  *   #/dress/7     dress card + photo gallery
  *   #/night/E     night outfit photos + dresses that use it
+ *   #/check       (not linked) problems in the sheet, for editors
  */
 
 const DRIVE_API = 'https://www.googleapis.com/drive/v3/files';
-const ALL_MARKS = new Set(['✓', '✔', 'Y', 'y', 'yes', 'Yes', 'YES']);
 const ORIGINAL_MIME_OK = /^image\/(jpeg|png|webp|gif)$/; // browsers can't show HEIC originals
-const WEATHER = {
-  hot: { short: 'Hot', long: 'Hot Weather', icon: '☀' },
-  cold: { short: 'Cold', long: 'Cold Weather', icon: '❄' },
-  both: { short: 'Hot & Cold', long: 'Hot & Cold Weather', icon: '☀❄' },
+const CACHE_KEY = 'darshan:sheet:v1';
+
+// ---------------------------------------------------------------- sheet vocabulary
+// Header names are compared after fold() (lower case, no accents, letters and digits
+// only), so "No.", "no" and "NO ." are the same column.
+
+const COLUMNS = {
+  number: ['no', 'number', 'dressno', 'dressnumber'],
+  name: ['name', 'dressname'],
+  jewellery: ['jewellery', 'jewelry', 'jewellerycolours', 'jewellerycolors', 'jewelrycolors'],
+  backdrop: ['backdrop'],
+  night: ['nightoutfits', 'nightoutfit', 'nightoutfitoptions'],
+  weather: ['weathersuitability', 'weather', 'season'],
+  location: ['location'],
 };
 
+// Kept in the sheet for editors; never shown in the app.
+const HIDDEN_COLUMNS = ['repairrequirements', 'firstoffered', 'designedby', 'daynight'];
+
+// Deity-set columns. Each cell lists items by code, optionally led by a metal
+// ("Gold C, T"). A blank cell means none of the items.
+const DEITY_SETS = {
+  rk: 'Radha Krishna',
+  jb: 'Jagannatha Baladeva',
+  s: 'Subhadra',
+  gngg: 'Gaura Nitai / Giriraja Govardhan',
+};
+const ITEMS = [
+  { code: 'C', label: 'Crowns' },
+  { code: 'T', label: 'Turban pieces' },
+  { code: 'S', label: 'Suryas' },
+];
+const METALS = ['gold', 'silver'];
+
+const LOCATION_NAMES = { tcr: 'Tottenham Court Road' };
+const FADED_LOCATIONS = ['tcr']; // dimmed in the list: not at the temple
+
+// Home-page filters, in display order. Several values can be picked in a group (a dress
+// matches any of them); groups combine (a dress must match every group in use).
+const FILTERS = [
+  { id: 'location', label: 'Location' },
+  { id: 'weather', label: 'Weather' },
+  { id: 'tags', label: 'Tags' },
+  { id: 'jewellery', label: 'Jewellery colour' },
+];
+
 const state = {
-  config: null,
+  model: null,       // built from the sheet by buildModel()
+  source: null,      // { kind: 'saved' | 'live', at: ms }
+  loadProblem: '',   // why the latest sheet wasn't used, if it wasn't
   settings: null,
-  filters: { q: '', weather: '', color: '' },
+  filters: { q: '', sel: Object.fromEntries(FILTERS.map((f) => [f.id, new Set()])) },
   photoCache: new Map(), // "<parentId>/<name>" -> photos[] | null (folder missing)
   galleryToken: 0,
   view: '',
@@ -42,39 +89,279 @@ function esc(value) {
     { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
 }
 
-function isAll(mark) {
-  return mark === true || ALL_MARKS.has(mark);
+/** Comparison key: "Diamanté " and "diamante" -> "diamante"; "No." -> "no". */
+function fold(s) {
+  return String(s ?? '').normalize('NFD').replace(/[\u0300-\u036f]/g, '')
+    .toLowerCase().replace(/[^a-z0-9]/g, '');
 }
 
-function markText(mark) {
-  return isAll(mark) ? '✓' : String(mark);
+/** Tidies a cell: no-break spaces, odd dashes, repeated and edge spaces. */
+function clean(s) {
+  return String(s ?? '').normalize('NFC').replace(/\u00a0/g, ' ')
+    .replace(/[\u2012-\u2015]/g, '-').replace(/\s+/g, ' ').trim();
 }
 
-/** "light blue" -> "Light Blue", whatever case it was typed in. */
-function colorName(c) {
-  return String(c).trim().toLowerCase().replace(/\b\w/g, (ch) => ch.toUpperCase());
+/**
+ * "yellow" -> "Yellow", "DIAMANTE" -> "Diamante". Short codes (AB, TCR) and
+ * anything typed in mixed case stay exactly as typed.
+ */
+function tidyCase(s) {
+  const letters = s.replace(/[^\p{L}]/gu, '');
+  if (!letters) return s;
+  const lower = s === s.toLowerCase();
+  const upper = s === s.toUpperCase();
+  if (upper && letters.length <= 3) return s;
+  if (!lower && !upper) return s;
+  return s.toLowerCase().replace(/(^|[\s(/-])(\p{L})/gu, (m, before, ch) => before + ch.toUpperCase());
 }
 
-function colorList(colors) {
-  return (colors || []).map(colorName).join(', ');
+/** "Silver and Emerald,  gold ," -> ["Silver", "Emerald", "Gold"], without repeats. */
+function splitList(s, { words = false } = {}) {
+  const sep = words ? /\s*(?:[,;&+]|\band\b)\s*/i : /\s*[,;]\s*/;
+  const seen = new Set();
+  const out = [];
+  for (const part of clean(s).split(sep)) {
+    const item = tidyCase(clean(part));
+    const key = fold(item);
+    if (key && !seen.has(key)) {
+      seen.add(key);
+      out.push(item);
+    }
+  }
+  return out;
 }
 
-function weatherInfo(w) {
-  return WEATHER[w] || { short: w || '?', long: w || 'Unknown' };
+/** "e, p ,i" -> ["E", "P", "I"]. */
+function splitLetters(s) {
+  return [...new Set(clean(s).toUpperCase().split(/[\s,;/]+/).filter(Boolean))];
 }
 
-function sortedDresses() {
-  return [...state.config.dresses].sort((a, b) => a.id - b.id);
-}
-
-function findDress(id) {
-  return state.config.dresses.find((d) => d.id === id);
+function fmtDate(ms) {
+  return new Date(ms).toLocaleDateString('en-GB', { day: 'numeric', month: 'short' });
 }
 
 async function loadJson(path) {
   const res = await fetch(path, { cache: 'no-cache' });
   if (!res.ok) throw new Error(`${path}: HTTP ${res.status}`);
   return res.json();
+}
+
+// ---------------------------------------------------------------- sheet -> model
+
+/** Minimal CSV parser: quoted fields, doubled quotes, commas/newlines inside quotes. */
+function parseCsv(text) {
+  const rows = [];
+  let row = [];
+  let field = '';
+  let quoted = false;
+  for (let i = 0; i < text.length; i++) {
+    const ch = text[i];
+    if (quoted) {
+      if (ch !== '"') field += ch;
+      else if (text[i + 1] === '"') { field += '"'; i++; } else quoted = false;
+    } else if (ch === '"') {
+      quoted = true;
+    } else if (ch === ',') {
+      row.push(field);
+      field = '';
+    } else if (ch === '\n' || ch === '\r') {
+      if (ch === '\r' && text[i + 1] === '\n') i++;
+      row.push(field);
+      rows.push(row);
+      row = [];
+      field = '';
+    } else {
+      field += ch;
+    }
+  }
+  if (field !== '' || row.length) {
+    row.push(field);
+    rows.push(row);
+  }
+  return rows;
+}
+
+/**
+ * Reads a deity-set cell such as "Gold C, T, S" into { C: 'Gold', T: 'Gold', S: 'Gold' }.
+ * Anything it can't read with certainty (e.g. "Gold" alone: which items?) is marked
+ * unclear and shown exactly as typed.
+ */
+function parseDeityCell(raw) {
+  const text = clean(raw);
+  const cell = { text, items: {}, unclear: false };
+  if (!text) return cell; // blank: none of the items
+  let metal = '';
+  for (const token of text.split(/\s*[,;]\s*/).filter(Boolean)) {
+    let codesHere = 0;
+    for (const word of token.split(' ')) {
+      const w = word.toLowerCase();
+      if (METALS.includes(w)) {
+        metal = tidyCase(w);
+      } else if (ITEMS.some((it) => it.code.toLowerCase() === w)) {
+        cell.items[w.toUpperCase()] = metal || '✓';
+        codesHere++;
+      } else {
+        cell.unclear = true; // a word we don't know
+      }
+    }
+    if (!codesHere) cell.unclear = true;
+  }
+  return cell;
+}
+
+function locationLabel(code) {
+  const full = LOCATION_NAMES[fold(code)];
+  return full ? `${full} (${code})` : code;
+}
+
+/** Turns the CSV into dresses, filter options and a list of problems for #/check. */
+function buildModel(csvText) {
+  const rows = parseCsv(csvText);
+  const headerAt = rows.findIndex((r) => r.some((c) => COLUMNS.number.includes(fold(c))));
+  if (headerAt < 0) return { error: "couldn't find a 'No.' column in the sheet" };
+
+  const taken = new Set();
+  const columns = rows[headerAt].map((h, idx) => {
+    const key = fold(h);
+    let role = Object.keys(COLUMNS).find((r) => COLUMNS[r].includes(key));
+    if (role && taken.has(role)) role = 'extra'; // a second "Name" column is just shown
+    if (role) taken.add(role);
+    else if (DEITY_SETS[key]) role = 'deity';
+    else if (!key || HIDDEN_COLUMNS.includes(key)) role = 'hidden';
+    else role = 'extra';
+    return { idx, key, label: clean(h), role };
+  });
+  const colFor = (role) => columns.find((c) => c.role === role);
+
+  const issues = {
+    missingColumns: ['name', 'jewellery', 'backdrop', 'night', 'location']
+      .filter((r) => !colFor(r)).map((r) => COLUMNS[r][0]),
+    skipped: [], duplicates: [], unnamed: [], sparse: [], unclear: [], badBackdrop: [], variants: [],
+  };
+
+  const dresses = [];
+  const byId = new Map();
+  rows.slice(headerAt + 1).forEach((r, i) => {
+    const sheetRow = headerAt + 2 + i;
+    if (!r.some((c) => clean(c))) return; // blank row
+    const get = (role) => { const c = colFor(role); return c ? clean(r[c.idx]) : ''; };
+
+    const idText = get('number');
+    if (!/^\d+$/.test(idText)) {
+      issues.skipped.push({ sheetRow, idText });
+      return;
+    }
+    const id = Number(idText);
+    if (byId.has(id)) {
+      issues.duplicates.push({ sheetRow, id });
+      return;
+    }
+
+    const rawName = get('name');
+    if (!rawName) issues.unnamed.push(id);
+    const name = rawName || `Dress ${id}`;
+    const backdrop = get('backdrop');
+    const locRaw = get('location');
+    const location = LOCATION_NAMES[fold(locRaw)] ? locRaw.toUpperCase() : tidyCase(locRaw);
+
+    const d = {
+      id,
+      name,
+      tags: [...name.matchAll(/\(([^)]+)\)/g)].map((m) => tidyCase(clean(m[1]))).filter(Boolean),
+      jewellery: splitList(get('jewellery'), { words: true }),
+      deity: columns.filter((c) => c.role === 'deity')
+        .map((c) => ({ label: DEITY_SETS[c.key], code: c.label, ...parseDeityCell(r[c.idx]) })),
+      backdrop,
+      backdropRef: /^\d+$/.test(backdrop) ? Number(backdrop) : null,
+      night: splitLetters(get('night')),
+      weather: splitList(get('weather')),
+      location,
+      faded: FADED_LOCATIONS.includes(fold(location)),
+      extras: columns.filter((c) => c.role === 'extra')
+        .map((c) => ({ label: c.label, value: clean(r[c.idx]) })).filter((e) => e.value),
+    };
+    d.filterValues = {
+      location: d.location ? [d.location] : [],
+      weather: d.weather,
+      tags: d.tags,
+      jewellery: d.jewellery,
+    };
+    d.sparse = !d.jewellery.length && d.deity.every((c) => !c.text) && !d.backdrop && !d.night.length;
+
+    if (d.sparse) issues.sparse.push(id);
+    d.deity.filter((c) => c.unclear).forEach((c) => issues.unclear.push({ id, code: c.code, text: c.text }));
+    byId.set(id, d);
+    dresses.push(d);
+  });
+  dresses.sort((a, b) => a.id - b.id);
+  dresses.filter((d) => d.backdropRef !== null && !byId.has(d.backdropRef))
+    .forEach((d) => issues.badBackdrop.push({ id: d.id, ref: d.backdropRef }));
+
+  // Filter options: one button per folded value, labelled with its most common spelling.
+  const options = {};
+  const spellings = {}; // label -> fold key -> Map(spelling -> count)
+  const tally = (label, values) => {
+    const byKey = spellings[label] || (spellings[label] = new Map());
+    values.forEach((v) => {
+      const k = fold(v);
+      if (!byKey.has(k)) byKey.set(k, new Map());
+      byKey.get(k).set(v, (byKey.get(k).get(v) || 0) + 1);
+    });
+  };
+  FILTERS.forEach((f) => dresses.forEach((d) => tally(f.label, d.filterValues[f.id])));
+  dresses.forEach((d) => d.backdrop && tally('Backdrop', [d.backdrop]));
+  FILTERS.forEach((f) => {
+    options[f.id] = [...(spellings[f.label] || new Map())].map(([key, forms]) => ({
+      key,
+      label: [...forms].sort((a, b) => b[1] - a[1])[0][0],
+    })).sort((a, b) => a.label.localeCompare(b.label));
+  });
+
+  // Same word spelled differently ("Diamante" / "Diamanté"), or singular/plural ("Gopi" / "Gopis").
+  Object.entries(spellings).forEach(([label, byKey]) => {
+    byKey.forEach((forms) => {
+      if (forms.size > 1) issues.variants.push({ label, forms: [...forms.keys()], merged: true });
+    });
+    const stems = new Map();
+    byKey.forEach((forms, key) => {
+      const stem = key.replace(/s$/, '');
+      if (!stems.has(stem)) stems.set(stem, []);
+      stems.get(stem).push([...forms.keys()][0]);
+    });
+    stems.forEach((forms) => {
+      if (forms.length > 1) issues.variants.push({ label, forms, merged: false });
+    });
+  });
+
+  return { dresses, byId, columns, options, issues };
+}
+
+// ---------------------------------------------------------------- loading + saved copy
+
+function readCache() {
+  try { return JSON.parse(localStorage.getItem(CACHE_KEY)); } catch (_) { return null; }
+}
+
+function writeCache(csv) {
+  try { localStorage.setItem(CACHE_KEY, JSON.stringify({ csv, at: Date.now() })); } catch (_) { /* full / private */ }
+}
+
+async function fetchSheet(url) {
+  const res = await fetch(url, { cache: 'no-cache' });
+  if (!res.ok) throw new Error(`HTTP ${res.status}`);
+  const text = await res.text();
+  if (/^\s*</.test(text)) throw new Error('the link returned a web page, not CSV (is the sheet still published?)');
+  return text;
+}
+
+function useModel(model, source) {
+  state.model = model;
+  state.source = source;
+  // Forget selections whose value no longer exists, so nobody gets stuck on an invisible filter.
+  FILTERS.forEach((f) => {
+    const keys = new Set(model.options[f.id].map((o) => o.key));
+    [...state.filters.sel[f.id]].forEach((k) => keys.has(k) || state.filters.sel[f.id].delete(k));
+  });
 }
 
 // ---------------------------------------------------------------- Drive
@@ -148,42 +435,53 @@ function originalUrl(photo) {
 
 // ---------------------------------------------------------------- routing
 
-function route() {
-  closeViewer();
-  if (state.view === 'home') state.homeScroll = window.scrollY;
+/** Draws the page for the current hash. `refresh` = same page, new data: keep scroll and focus. */
+function route(refresh = false) {
+  if (!refresh) {
+    closeViewer();
+    if (state.view === 'home') state.homeScroll = window.scrollY;
+  }
+  if (!state.model) return; // start() shows "Loading…" or the load error
 
-  const parts = location.hash.replace(/^#\/?/, '').split('/').filter(Boolean)
-    .map(decodeURIComponent);
+  const parts = location.hash.replace(/^#\/?/, '').split('/').filter(Boolean).map(decodeURIComponent);
+  const focusedSearch = refresh && document.activeElement?.id === 'search';
 
   if (parts[0] === 'dress' && parts[1]) {
     state.view = 'dress';
     renderDress(Number(parts[1]));
-    window.scrollTo(0, 0);
   } else if (parts[0] === 'night' && parts[1]) {
     state.view = 'night';
     renderNight(parts[1].toUpperCase());
-    window.scrollTo(0, 0);
+  } else if (parts[0] === 'check') {
+    state.view = 'check';
+    renderCheck();
   } else {
     state.view = 'home';
     renderHome();
-    window.scrollTo(0, state.homeScroll);
   }
+
+  if (focusedSearch) {
+    const input = document.getElementById('search');
+    if (input) { input.focus(); input.setSelectionRange(input.value.length, input.value.length); }
+  }
+  if (!refresh) window.scrollTo(0, state.view === 'home' ? state.homeScroll : 0);
 }
 
 // ---------------------------------------------------------------- home
 
-function allColors() {
-  const set = new Set();
-  state.config.dresses.forEach((d) => (d.colors || []).forEach((c) => set.add(String(c).toLowerCase())));
-  return [...set].sort();
+function chipGroup(group) {
+  const options = state.model.options[group.id];
+  if (!options.length) return '';
+  const sel = state.filters.sel[group.id];
+  const chips = options.map((o) => `
+    <button type="button" class="chip${sel.has(o.key) ? ' on' : ''}" aria-pressed="${sel.has(o.key)}"
+            data-group="${group.id}" data-value="${esc(o.key)}">${esc(o.label)}</button>`).join('');
+  return `<div class="chip-group" role="group" aria-label="${esc(group.label)}">
+    <span class="chip-label">${esc(group.label)}</span>${chips}</div>`;
 }
 
-function chipGroup(label, key, options) {
-  if (!options.length) return '';
-  const chips = options.map((o) => `
-    <button type="button" class="chip${state.filters[key] === o.value ? ' on' : ''}"
-            data-key="${key}" data-value="${esc(o.value)}">${esc(o.label)}</button>`).join('');
-  return `<div class="chip-group"><span class="chip-label">${esc(label)}</span>${chips}</div>`;
+function filtersActive() {
+  return Boolean(state.filters.q.trim()) || FILTERS.some((g) => state.filters.sel[g.id].size);
 }
 
 function renderHome() {
@@ -192,9 +490,8 @@ function renderHome() {
     <section class="controls panel">
       <input id="search" type="search" placeholder="Search by number or name"
              value="${esc(f.q)}" autocomplete="off">
-      ${chipGroup('Weather', 'weather', [
-        { value: 'hot', label: 'Hot' }, { value: 'cold', label: 'Cold' }])}
-      ${chipGroup('Color', 'color', allColors().map((c) => ({ value: c, label: colorName(c) })))}
+      ${FILTERS.map(chipGroup).join('')}
+      <button type="button" id="clear" class="clear-filters" hidden>Clear all filters</button>
     </section>
     <p id="count" class="count"></p>
     <ul id="list" class="list"></ul>`;
@@ -204,82 +501,91 @@ function renderHome() {
     updateList();
   });
   app.querySelectorAll('.chip').forEach((chip) => chip.addEventListener('click', () => {
-    const { key, value } = chip.dataset;
-    f[key] = f[key] === value ? '' : value; // tap again to clear
-    app.querySelectorAll(`.chip[data-key="${key}"]`).forEach((c) =>
-      c.classList.toggle('on', c.dataset.value === f[key]));
+    const sel = f.sel[chip.dataset.group];
+    const value = chip.dataset.value;
+    if (sel.has(value)) sel.delete(value); else sel.add(value); // tap again to unselect
+    chip.classList.toggle('on', sel.has(value));
+    chip.setAttribute('aria-pressed', String(sel.has(value)));
     updateList();
   }));
+  document.getElementById('clear').addEventListener('click', () => {
+    f.q = '';
+    FILTERS.forEach((g) => f.sel[g.id].clear());
+    renderHome();
+  });
   updateList();
 }
 
 function matches(d) {
   const f = state.filters;
-  const q = f.q.trim().toLowerCase();
-  if (q && !String(d.id).startsWith(q) && !String(d.name || '').toLowerCase().includes(q)) return false;
-  // "both" dresses suit either season, so they show under Hot and under Cold.
-  if (f.weather && d.weather !== f.weather && d.weather !== 'both') return false;
-  if (f.color && !(d.colors || []).some((c) => String(c).toLowerCase() === f.color)) return false;
-  return true;
+  const q = fold(f.q);
+  if (q && !String(d.id).startsWith(q) && !fold(d.name).includes(q)) return false;
+  return FILTERS.every((g) => {
+    const sel = f.sel[g.id];
+    return !sel.size || d.filterValues[g.id].some((v) => sel.has(fold(v)));
+  });
 }
 
 function updateList() {
-  const shown = sortedDresses().filter(matches);
-  document.getElementById('count').textContent =
-    `${shown.length} of ${state.config.dresses.length} dresses`;
-  document.getElementById('list').innerHTML = shown.map((d) => {
-    const meta = [
-      colorList(d.colors),
-      d.nightOutfits?.length ? `Night: ${d.nightOutfits.join(' ')}` : '',
-    ].filter(Boolean).join(' · ');
-    return `
-      <li><a class="row" href="#/dress/${d.id}">
+  const m = state.model;
+  const shown = m.dresses.filter(matches);
+  document.getElementById('clear').hidden = !filtersActive();
+  let count = `${shown.length} of ${m.dresses.length} dresses`;
+  if (state.loadProblem && state.source?.kind === 'saved') count += ` · saved copy from ${fmtDate(state.source.at)}`;
+  document.getElementById('count').textContent = count;
+  document.getElementById('list').innerHTML = shown.map((d) => `
+      <li><a class="row${d.faded ? ' faded' : ''}" href="#/dress/${d.id}">
         <span class="num">${esc(d.id)}</span>
         <span class="row-main">
           <span class="row-name">${esc(d.name)}</span>
-          ${meta ? `<span class="row-meta">${esc(meta)}</span>` : ''}
+          ${d.jewellery.length ? `<span class="row-meta">${esc(d.jewellery.join(', '))}</span>` : ''}
         </span>
-      </a></li>`;
-  }).join('') || '<li class="status">No dresses match these filters.</li>';
+        ${d.faded ? `<span class="loc-badge" title="${esc(locationLabel(d.location))}">${esc(d.location)}</span>` : ''}
+      </a></li>`).join('') || '<li class="status">No dresses match these filters.</li>';
 }
 
 // ---------------------------------------------------------------- dress
 
-function jewelryTable(d) {
-  const jw = d.jewelry || {};
-  if (!Object.keys(jw).length) return '';
-  const g = state.config.glossary || {};
-  // Glossary order first; unknown codes are still shown (raw) instead of dropped.
-  const rows = [...new Set([...(g.deitySets || []), ...Object.keys(jw)])];
-  const cols = [...new Set([...(g.jewelry || []), ...Object.values(jw).flatMap((r) => Object.keys(r || {}))])];
-
-  const head = cols.map((c) => `<th scope="col">${esc(c)}</th>`).join('');
-  const body = rows.map((r) => `
-    <tr><th scope="row">${esc(r)}</th>${cols.map((c) => {
-      const mark = jw[r]?.[c];
-      return `<td>${mark === undefined || mark === '' ? '' : esc(markText(mark))}</td>`;
-    }).join('')}</tr>`).join('');
-  return `<table class="jewelry"><thead><tr><th></th>${head}</tr></thead><tbody>${body}</tbody></table>`;
+function deityTable(d) {
+  if (!d.deity.length || d.deity.every((c) => !c.text)) return '';
+  const head = ITEMS.map((it) => `<th scope="col">${esc(it.label)}</th>`).join('');
+  const body = d.deity.map((c) => {
+    const cells = c.unclear
+      ? `<td colspan="${ITEMS.length}" class="as-typed">${esc(c.text)}</td>`
+      : ITEMS.map((it) => (c.items[it.code]
+        ? `<td>${esc(c.items[it.code])}</td>`
+        : '<td class="none"><span aria-hidden="true">–</span><span class="sr-only">Not available</span></td>')).join('');
+    return `<tr><th scope="row">${esc(c.label)}</th>${cells}</tr>`;
+  }).join('');
+  return `<table class="jewelry deity"><thead><tr><th></th>${head}</tr></thead><tbody>${body}</tbody></table>`;
 }
 
 function nightLinks(letters) {
-  const linked = driveReady(state.settings?.nightOutfitsFolderId);
-  return letters.map((l) => (linked
-    ? `<a class="pill" href="#/night/${encodeURIComponent(l)}">${esc(l)}</a>`
-    : `<span class="pill">${esc(l)}</span>`)).join(' ');
+  return letters.map((l) => `<a class="pill" href="#/night/${encodeURIComponent(l)}">${esc(l)}</a>`).join(' ');
+}
+
+function backdropHtml(d) {
+  if (d.backdropRef === null) return esc(d.backdrop);
+  const target = state.model.byId.get(d.backdropRef);
+  return target
+    ? `Same as <a class="pill" href="#/dress/${target.id}">${esc(target.id)} · ${esc(target.name)}</a>`
+    : `Same as dress ${esc(d.backdropRef)}`;
 }
 
 function renderDress(id) {
-  const d = findDress(id);
+  const m = state.model;
+  const d = m.byId.get(id);
   if (!d) {
     app.innerHTML = `<p class="status">Dress ${esc(id)} not found. <a href="#/">Back to all dresses</a></p>`;
     return;
   }
-  const list = sortedDresses();
-  const i = list.indexOf(d);
-  const prev = list[i - 1];
-  const next = list[i + 1];
-  const w = weatherInfo(d.weather);
+  const i = m.dresses.indexOf(d);
+  const prev = m.dresses[i - 1];
+  const next = m.dresses[i + 1];
+  const more = [
+    d.weather.length ? ['Weather', esc(d.weather.join(', '))] : null,
+    ...d.extras.map((e) => [esc(e.label), esc(e.value)]),
+  ].filter(Boolean);
 
   app.innerHTML = `
     <nav class="crumbs">
@@ -293,17 +599,23 @@ function renderDress(id) {
       <header class="card-head">
         <span class="num-badge">${esc(d.id)}</span>
         <h1>${esc(d.name)}</h1>
-        <span class="sticker sticker-${esc(d.weather)}">
-          <span class="sticker-icon" aria-hidden="true">${esc(w.icon)}</span>
-          <span>Suitable for <b>${esc(w.long)}</b></span>
-        </span>
+        ${d.location ? `<span class="sticker ${d.faded ? 'sticker-away' : 'sticker-both'}">
+          <span class="sticker-icon" aria-hidden="true">⌂</span>
+          <span><b>${esc(locationLabel(d.location))}</b></span></span>` : ''}
       </header>
-      ${jewelryTable(d)}
+      ${d.tags.length ? `<p class="tags">${d.tags.map((t) => `<span class="tag">${esc(t)}</span>`).join('')}</p>` : ''}
+      ${d.jewellery.length ? `
+        <section class="prime">
+          <h2 class="prime-label">Jewellery colours</h2>
+          <p class="jewels">${d.jewellery.map((j) => `<span class="jewel">${esc(j)}</span>`).join('')}</p>
+        </section>` : ''}
+      ${deityTable(d)}
       <dl class="facts">
-        ${d.nightOutfits?.length ? `<dt>Night outfit options</dt><dd>${nightLinks(d.nightOutfits)}</dd>` : ''}
-        ${d.colors?.length ? `<dt>Colors</dt><dd>${esc(colorList(d.colors))}</dd>` : ''}
-        ${d.backdrop ? `<dt>Matching backdrop</dt><dd>${esc(d.backdrop)}</dd>` : ''}
+        ${d.backdrop ? `<dt>Backdrop</dt><dd>${backdropHtml(d)}</dd>` : ''}
+        ${d.night.length ? `<dt>Night outfit options</dt><dd>${nightLinks(d.night)}</dd>` : ''}
       </dl>
+      ${d.sparse ? '<p class="soon">More details coming soon.</p>' : ''}
+      ${more.length ? `<dl class="facts more">${more.map(([k, v]) => `<dt>${k}</dt><dd>${v}</dd>`).join('')}</dl>` : ''}
     </article>
     <section class="photos">
       <h2>Photos</h2>
@@ -316,7 +628,7 @@ function renderDress(id) {
 // ---------------------------------------------------------------- night outfit
 
 function renderNight(letter) {
-  const users = sortedDresses().filter((d) => (d.nightOutfits || []).includes(letter));
+  const users = state.model.dresses.filter((d) => d.night.includes(letter));
   app.innerHTML = `
     <nav class="crumbs"><a href="#/">← All dresses</a></nav>
     <article class="card">
@@ -333,6 +645,52 @@ function renderNight(letter) {
     </section>`;
 
   loadGallery(state.settings?.nightOutfitsFolderId, letter);
+}
+
+// ---------------------------------------------------------------- check (for sheet editors)
+
+function renderCheck() {
+  const m = state.model;
+  const is = m.issues;
+  const link = (id) => `<a href="#/dress/${id}">${esc(id)}</a>`;
+  const section = (title, items, fmt, hint = '') => `
+    <section class="check-sec">
+      <h2>${esc(title)} <span class="check-count${items.length ? ' has' : ''}">${items.length}</span></h2>
+      ${hint ? `<p class="check-hint">${hint}</p>` : ''}
+      ${items.length ? `<ul>${items.map((x) => `<li>${fmt(x)}</li>`).join('')}</ul>` : '<p class="ok">✓ None</p>'}
+    </section>`;
+  const roleText = { number: 'dress number', name: 'title', jewellery: 'jewellery colours (filter)',
+    backdrop: 'backdrop', night: 'night outfit links', weather: 'weather (filter)', location: 'location (filter)',
+    deity: 'crowns / turbans / suryas table', hidden: 'not shown', extra: 'shown under "more details"' };
+  const source = state.source?.kind === 'live'
+    ? `loaded from the sheet at ${new Date(state.source.at).toLocaleTimeString('en-GB')}`
+    : `saved copy from ${fmtDate(state.source.at)}`;
+
+  app.innerHTML = `
+    <nav class="crumbs"><a href="#/">← All dresses</a></nav>
+    <article class="card check">
+      <h1>Sheet check</h1>
+      <p class="facts-line">${m.dresses.length} dresses · ${esc(source)}</p>
+      ${state.loadProblem ? `<p class="status error">Latest sheet not used: ${esc(state.loadProblem)}</p>` : ''}
+      ${is.missingColumns.length ? `<p class="status error">Columns not found: ${esc(is.missingColumns.join(', '))}</p>` : ''}
+      ${section('Rows skipped (no dress number)', is.skipped,
+        (x) => `Sheet row ${x.sheetRow}${x.idText ? `: “${esc(x.idText)}”` : ''}`)}
+      ${section('Repeated numbers (first row used)', is.duplicates,
+        (x) => `Sheet row ${x.sheetRow} repeats ${link(x.id)}`)}
+      ${section('No name', is.unnamed, link)}
+      ${section('Almost no details', is.sparse, (id) => `${link(id)} · ${esc(m.byId.get(id).name)}`)}
+      ${section('Crowns / turbans / suryas shown as typed', is.unclear,
+        (x) => `${link(x.id)} · ${esc(x.code)}: “${esc(x.text)}”`,
+        'Use codes C, T, S, optionally after Gold or Silver, e.g. “Gold C, T”.')}
+      ${section('Backdrop points to a missing dress', is.badBackdrop, (x) => `${link(x.id)} → ${esc(x.ref)}`)}
+      ${section('Possible duplicate spellings', is.variants,
+        (x) => `${esc(x.label)}: ${x.forms.map((f) => `“${esc(f)}”`).join(' / ')}${x.merged ? ' (already treated as one)' : ''}`)}
+      <section class="check-sec">
+        <h2>Columns</h2>
+        <ul>${m.columns.filter((c) => c.label).map((c) =>
+          `<li><b>${esc(c.label)}</b>: ${esc(roleText[c.role])}</li>`).join('')}</ul>
+      </section>
+    </article>`;
 }
 
 // ---------------------------------------------------------------- gallery
@@ -593,21 +951,61 @@ window.addEventListener('resize', () => {
 
 // ---------------------------------------------------------------- start
 
-async function start() {
-  try {
-    state.config = await loadJson('config.json');
-  } catch (err) {
-    app.innerHTML = `<p class="status error">Could not load config.json: ${esc(err.message)}</p>`;
-    return;
+function showLoadProblem(problem) {
+  state.loadProblem = problem;
+  console.warn('Catalog data:', problem);
+  if (!state.model) {
+    app.innerHTML = `<p class="status error">Could not load the catalog (${esc(problem)}). Please try again later.</p>`;
+  } else if (state.view === 'home' || state.view === 'check') {
+    route(true); // show the "saved copy" note
   }
+}
+
+async function start() {
+  window.addEventListener('hashchange', () => route());
   try {
     state.settings = await loadJson('settings.json');
   } catch (_) {
-    state.settings = null; // text still works; galleries say "not set up"
+    state.settings = null;
   }
-  state.config.dresses = state.config.dresses || [];
-  window.addEventListener('hashchange', route);
-  route();
+
+  // 1. Saved copy first: return visits show the catalog straight away.
+  const saved = readCache();
+  if (saved?.csv) {
+    const m = buildModel(saved.csv);
+    if (!m.error && m.dresses.length) {
+      useModel(m, { kind: 'saved', at: saved.at });
+      route();
+    }
+  }
+
+  // 2. Then the live sheet. A sheet that looks broken (no 'No.' column, no dresses, or
+  //    fewer than half as many as before) is not used and doesn't replace the saved copy.
+  const url = state.settings?.sheetCsvUrl;
+  if (!url) {
+    showLoadProblem('settings.json has no sheetCsvUrl');
+    return;
+  }
+  try {
+    const csv = await fetchSheet(url);
+    const m = buildModel(csv);
+    const before = state.model?.dresses.length || 0;
+    const problem = m.error
+      || (!m.dresses.length && 'the sheet has no dress rows')
+      || (m.dresses.length < before / 2 && `the sheet now has only ${m.dresses.length} dresses (was ${before})`);
+    if (problem) {
+      showLoadProblem(problem);
+      return;
+    }
+    const first = !state.model;
+    const changed = csv !== saved?.csv;
+    writeCache(csv);
+    useModel(m, { kind: 'live', at: Date.now() });
+    if (first) route();
+    else if (changed || state.view === 'check') route(true);
+  } catch (err) {
+    showLoadProblem(`could not load the sheet: ${err.message}`);
+  }
 }
 
 start();
