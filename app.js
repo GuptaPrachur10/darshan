@@ -56,14 +56,16 @@ const ITEMS = [
 ];
 const METALS = ['gold', 'silver'];
 
-const LOCATION_NAMES = { tcr: 'Office at Tottenham Court Road' };
+const LOCATION_NAMES = { tcr: 'Tottenham Court Road office' }; // explained in legends; pages show the code
 const FADED_LOCATIONS = ['tcr']; // dimmed in the list: not at the temple
 
 // Home-page filters, in display order. Several values can be picked in a group (a dress
 // matches any of them); groups combine (a dress must match every group in use).
 const FILTERS = [
   { id: 'location', label: 'Location' },
-  { id: 'weather', label: 'Weather' },
+  // Always offered. "Hot" also finds dresses for both seasons, likewise "Cold"; "Both" finds only those.
+  { id: 'weather', label: 'Weather', fixed: [
+    { key: 'hot', label: 'Hot' }, { key: 'cold', label: 'Cold' }, { key: 'both', label: 'Both' }] },
   { id: 'tags', label: 'Tags' },
   { id: 'jewellery', label: 'Jewellery colour' },
 ];
@@ -129,6 +131,22 @@ function splitList(s, { words = false } = {}) {
     }
   }
   return out;
+}
+
+/**
+ * Moves notes in brackets out of list items, so filters and the list use the plain value:
+ * ["Gold (see garland colour)", "Red"] -> jewellery ["Gold", "Red"], jewelleryNotes { Gold: "see garland colour" }.
+ */
+function splitNotes(items) {
+  const jewellery = [];
+  const jewelleryNotes = {};
+  items.forEach((item) => {
+    const m = item.match(/^(.*?)\s*\(([^)]*)\)\s*$/);
+    const base = m && clean(m[1]) ? clean(m[1]) : item;
+    if (!jewellery.some((j) => fold(j) === fold(base))) jewellery.push(base);
+    if (m && clean(m[1]) && clean(m[2])) jewelleryNotes[base] = clean(m[2]);
+  });
+  return { jewellery, jewelleryNotes };
 }
 
 /** "e, p ,i" -> ["E", "P", "I"]. */
@@ -209,9 +227,30 @@ function parseDeityCell(raw) {
   return cell;
 }
 
-function locationLabel(code) {
-  const full = LOCATION_NAMES[fold(code)];
-  return full ? `${full} (${code})` : code;
+/** "TCR" -> "Tottenham Court Road office"; codes without an explanation give ''. */
+/**
+ * Reads a weather cell however it was typed: "Hot", "Hot Weather", "summer", "Cold",
+ * "Hot, Cold", "Hot & Cold", "Both", "All" -> { hot, cold }. Unknown text -> both false.
+ */
+function parseWeather(raw) {
+  const t = clean(raw).toLowerCase();
+  const both = /\b(both|all|any|all[- ]?year)\b/.test(t);
+  return {
+    text: clean(raw),
+    hot: both || /\b(hot|summer|warm)\b/.test(t),
+    cold: both || /\b(cold|winter|cool)\b/.test(t),
+  };
+}
+
+function weatherLabel(w) {
+  if (w.hot && w.cold) return 'Hot & Cold';
+  if (w.hot) return 'Hot';
+  if (w.cold) return 'Cold';
+  return w.text; // not understood: shown as typed
+}
+
+function locationName(code) {
+  return LOCATION_NAMES[fold(code)] || '';
 }
 
 /** Turns the CSV into dresses, filter options and a list of problems for #/check. */
@@ -236,7 +275,7 @@ function buildModel(csvText) {
   const issues = {
     missingColumns: ['name', 'jewellery', 'backdrop', 'night', 'location']
       .filter((r) => !colFor(r)).map((r) => COLUMNS[r][0]),
-    skipped: [], duplicates: [], unnamed: [], sparse: [], unclear: [], badBackdrop: [], variants: [],
+    skipped: [], duplicates: [], unnamed: [], sparse: [], unclear: [], weather: [], badBackdrop: [], variants: [],
   };
 
   const dresses = [];
@@ -268,13 +307,13 @@ function buildModel(csvText) {
       id,
       name,
       tags: [...name.matchAll(/\(([^)]+)\)/g)].map((m) => tidyCase(clean(m[1]))).filter(Boolean),
-      jewellery: splitList(get('jewellery'), { words: true }),
+      ...splitNotes(splitList(get('jewellery'), { words: true })),
       deity: columns.filter((c) => c.role === 'deity')
         .map((c) => ({ label: DEITY_SETS[c.key], code: c.label, ...parseDeityCell(r[c.idx]) })),
       backdrop,
       backdropRef: /^\d+$/.test(backdrop) ? Number(backdrop) : null,
       night: splitLetters(get('night')),
-      weather: splitList(get('weather')),
+      weather: parseWeather(get('weather')),
       location,
       faded: FADED_LOCATIONS.includes(fold(location)),
       extras: columns.filter((c) => c.role === 'extra')
@@ -282,7 +321,8 @@ function buildModel(csvText) {
     };
     d.filterValues = {
       location: d.location ? [d.location] : [],
-      weather: d.weather,
+      weather: d.weather.hot && d.weather.cold ? ['Hot', 'Cold', 'Both']
+        : d.weather.hot ? ['Hot'] : d.weather.cold ? ['Cold'] : [],
       tags: d.tags,
       jewellery: d.jewellery,
     };
@@ -290,6 +330,7 @@ function buildModel(csvText) {
 
     if (d.sparse) issues.sparse.push(id);
     d.deity.filter((c) => c.unclear).forEach((c) => issues.unclear.push({ id, code: c.code, text: c.text }));
+    if (d.weather.text && !d.weather.hot && !d.weather.cold) issues.weather.push({ id, text: d.weather.text });
     byId.set(id, d);
     dresses.push(d);
   });
@@ -308,9 +349,13 @@ function buildModel(csvText) {
       byKey.get(k).set(v, (byKey.get(k).get(v) || 0) + 1);
     });
   };
-  FILTERS.forEach((f) => dresses.forEach((d) => tally(f.label, d.filterValues[f.id])));
+  FILTERS.filter((f) => !f.fixed).forEach((f) => dresses.forEach((d) => tally(f.label, d.filterValues[f.id])));
   dresses.forEach((d) => d.backdrop && tally('Backdrop', [d.backdrop]));
   FILTERS.forEach((f) => {
+    if (f.fixed) {
+      options[f.id] = f.fixed;
+      return;
+    }
     options[f.id] = [...(spellings[f.label] || new Map())].map(([key, forms]) => ({
       key,
       label: [...forms].sort((a, b) => b[1] - a[1])[0][0],
@@ -517,12 +562,12 @@ function renderHome() {
   updateList();
 }
 
-/** Explains the dimmed rows, e.g. "Dimmed: Office at Tottenham Court Road (TCR)". */
+/** "Note: the dresses shown faded below are currently at the TCR (Tottenham Court Road office)." */
 function homeLegend() {
   const away = [...new Set(state.model.dresses.filter((d) => d.faded).map((d) => d.location))];
   if (!away.length) return '';
-  return `<p class="legend"><span class="legend-swatch" aria-hidden="true"></span>
-    Dimmed: ${away.map((code) => esc(locationLabel(code))).join(', ')}</p>`;
+  const where = away.map((code) => (locationName(code) ? `${code} (${locationName(code)})` : code)).join(' or ');
+  return `<p class="legend">Note: the dresses shown faded below are currently at the ${esc(where)}.</p>`;
 }
 
 function matches(d) {
@@ -549,7 +594,7 @@ function updateList() {
           <span class="row-name">${esc(d.name)}</span>
           ${d.jewellery.length ? `<span class="row-meta">${esc(d.jewellery.join(', '))}</span>` : ''}
         </span>
-        ${d.faded ? `<span class="sr-only">(${esc(locationLabel(d.location))})</span>` : ''}
+        ${d.faded ? `<span class="sr-only">(at ${esc(d.location)})</span>` : ''}
       </a></li>`).join('') || '<li class="status">No dresses match these filters.</li>';
 }
 
@@ -566,9 +611,17 @@ function deityTable(d) {
         : '<td class="none"><span aria-hidden="true">–</span><span class="sr-only">Not available</span></td>')).join('');
     return `<tr><th scope="row"><abbr title="${esc(c.label)}">${esc(c.code)}</abbr></th>${cells}</tr>`;
   }).join('');
-  const legend = d.deity.map((c) => `<span><b>${esc(c.code)}</b> ${esc(c.label)}</span>`).join('');
-  return `<table class="jewelry deity"><thead><tr><th></th>${head}</tr></thead><tbody>${body}</tbody></table>
-    <p class="legend deity-legend">${legend}</p>`;
+  return `<table class="jewelry deity"><thead><tr><th></th>${head}</tr></thead><tbody>${body}</tbody></table>`;
+}
+
+/** Bottom-of-page key for the short codes used on a dress page (RK, JB, ..., TCR). */
+function dressLegend(d) {
+  const entries = [];
+  if (!d.deity.every((c) => !c.text)) d.deity.forEach((c) => entries.push([c.code, c.label]));
+  if (locationName(d.location)) entries.push([d.location, locationName(d.location)]);
+  if (!entries.length) return '';
+  return `<footer class="page-legend"><h2>Key</h2><dl>${entries.map(([k, v]) =>
+    `<div><dt>${esc(k)}</dt><dd>${esc(v)}</dd></div>`).join('')}</dl></footer>`;
 }
 
 function nightLinks(letters) {
@@ -594,7 +647,7 @@ function renderDress(id) {
   const prev = m.dresses[i - 1];
   const next = m.dresses[i + 1];
   const more = [
-    d.weather.length ? ['Weather', esc(d.weather.join(', '))] : null,
+    d.weather.text ? ['Weather', esc(weatherLabel(d.weather))] : null,
     ...d.extras.map((e) => [esc(e.label), esc(e.value)]),
   ].filter(Boolean);
 
@@ -612,13 +665,14 @@ function renderDress(id) {
         <h1>${esc(d.name)}</h1>
         ${d.location ? `<span class="sticker ${d.faded ? 'sticker-away' : 'sticker-both'}">
           <span class="sticker-icon" aria-hidden="true">⌂</span>
-          <span><b>${esc(locationLabel(d.location))}</b></span></span>` : ''}
+          <span><b>${esc(d.location)}</b></span></span>` : ''}
       </header>
       ${d.tags.length ? `<p class="tags">${d.tags.map((t) => `<span class="tag">${esc(t)}</span>`).join('')}</p>` : ''}
       ${d.jewellery.length ? `
         <section class="prime">
           <h2 class="prime-label">Jewellery colours</h2>
-          <p class="jewels">${d.jewellery.map((j) => `<span class="jewel">${esc(j)}</span>`).join('')}</p>
+          <p class="jewels">${d.jewellery.map((j) => `<span class="jewel">${esc(j)}${d.jewelleryNotes[j]
+            ? ` <small class="jewel-note">(${esc(d.jewelleryNotes[j])})</small>` : ''}</span>`).join('')}</p>
         </section>` : ''}
       ${deityTable(d)}
       <dl class="facts">
@@ -631,7 +685,8 @@ function renderDress(id) {
     <section class="photos">
       <h2>Photos</h2>
       <div id="gallery" class="gallery"></div>
-    </section>`;
+    </section>
+    ${dressLegend(d)}`;
 
   loadGallery(state.settings?.dressesFolderId, String(d.id));
 }
@@ -693,6 +748,8 @@ function renderCheck() {
       ${section('Crowns / turbans / suryas shown as typed', is.unclear,
         (x) => `${link(x.id)} · ${esc(x.code)}: “${esc(x.text)}”`,
         'Use codes C, T, S, optionally after Gold or Silver, e.g. “Gold C, T”.')}
+      ${section('Weather not understood (no filter)', is.weather, (x) => `${link(x.id)} · “${esc(x.text)}”`,
+        'Write Hot, Cold, or Both.')}
       ${section('Backdrop points to a missing dress', is.badBackdrop, (x) => `${link(x.id)} → ${esc(x.ref)}`)}
       ${section('Possible duplicate spellings', is.variants,
         (x) => `${esc(x.label)}: ${x.forms.map((f) => `“${esc(f)}”`).join(' / ')}${x.merged ? ' (already treated as one)' : ''}`)}
