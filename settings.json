@@ -1,5 +1,6 @@
 {
   "apiKey": "AIzaSyApzATW8fanJZ-V2oOdDexcfTAx3ncBZ_c",
   "dressesFolderId": "1xBzhMSR7_hHUX_kApJI_O-Ovo0I9VY6r",
-  "nightOutfitsFolderId": "1CsKXzDa5dzMUeMIKi5cqHZl_fbceZF9l"
+  "nightOutfitsFolderId": "1CsKXzDa5dzMUeMIKi5cqHZl_fbceZF9l",
+  "sheetCsvUrl": "https://docs.google.com/spreadsheets/d/e/2PACX-1vRXp7ugnK0UO2suo2A7F6OBMt4FPAB-5Bu0cBrdCI1RdSExglnSqSr33TkV5dfCiej_GLEj3264Z6N7/pub?gid=0&single=true&output=csv"
 }
