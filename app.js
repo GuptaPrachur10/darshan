@@ -56,7 +56,7 @@ const ITEMS = [
 ];
 const METALS = ['gold', 'silver'];
 
-const LOCATION_NAMES = { tcr: 'Tottenham Court Road' };
+const LOCATION_NAMES = { tcr: 'Office at Tottenham Court Road' };
 const FADED_LOCATIONS = ['tcr']; // dimmed in the list: not at the temple
 
 // Home-page filters, in display order. Several values can be picked in a group (a dress
@@ -493,6 +493,7 @@ function renderHome() {
       ${FILTERS.map(chipGroup).join('')}
       <button type="button" id="clear" class="clear-filters" hidden>Clear all filters</button>
     </section>
+    ${homeLegend()}
     <p id="count" class="count"></p>
     <ul id="list" class="list"></ul>`;
 
@@ -514,6 +515,14 @@ function renderHome() {
     renderHome();
   });
   updateList();
+}
+
+/** Explains the dimmed rows, e.g. "Dimmed: Office at Tottenham Court Road (TCR)". */
+function homeLegend() {
+  const away = [...new Set(state.model.dresses.filter((d) => d.faded).map((d) => d.location))];
+  if (!away.length) return '';
+  return `<p class="legend"><span class="legend-swatch" aria-hidden="true"></span>
+    Dimmed: ${away.map((code) => esc(locationLabel(code))).join(', ')}</p>`;
 }
 
 function matches(d) {
@@ -540,7 +549,7 @@ function updateList() {
           <span class="row-name">${esc(d.name)}</span>
           ${d.jewellery.length ? `<span class="row-meta">${esc(d.jewellery.join(', '))}</span>` : ''}
         </span>
-        ${d.faded ? `<span class="loc-badge" title="${esc(locationLabel(d.location))}">${esc(d.location)}</span>` : ''}
+        ${d.faded ? `<span class="sr-only">(${esc(locationLabel(d.location))})</span>` : ''}
       </a></li>`).join('') || '<li class="status">No dresses match these filters.</li>';
 }
 
@@ -555,9 +564,11 @@ function deityTable(d) {
       : ITEMS.map((it) => (c.items[it.code]
         ? `<td>${esc(c.items[it.code])}</td>`
         : '<td class="none"><span aria-hidden="true">–</span><span class="sr-only">Not available</span></td>')).join('');
-    return `<tr><th scope="row">${esc(c.label)}</th>${cells}</tr>`;
+    return `<tr><th scope="row"><abbr title="${esc(c.label)}">${esc(c.code)}</abbr></th>${cells}</tr>`;
   }).join('');
-  return `<table class="jewelry deity"><thead><tr><th></th>${head}</tr></thead><tbody>${body}</tbody></table>`;
+  const legend = d.deity.map((c) => `<span><b>${esc(c.code)}</b> ${esc(c.label)}</span>`).join('');
+  return `<table class="jewelry deity"><thead><tr><th></th>${head}</tr></thead><tbody>${body}</tbody></table>
+    <p class="legend deity-legend">${legend}</p>`;
 }
 
 function nightLinks(letters) {
